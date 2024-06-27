@@ -1,10 +1,11 @@
 Name:           xml-security-c
 Version:        2.0.4
 Release:        1
-Summary:        Apache XML security C++ library
+Summary:        Shibboleth XML Security C++ Library
 Group:          Development/Libraries/C and C++
-License:        Apache 2.0
-URL:            http://www.apache.org/dist/santuario/c-library/
+Vendor:         Shibboleth Consortium
+License:        Apache-2.0
+URL:            http://www.opensaml.org/
 Source:         %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
@@ -26,7 +27,7 @@ Xerces-C XML Parser and Xalan-C XSLT processor. The latter is used for processin
 XPath and XSLT transforms.
 
 %package -n xml-security-c-bin
-Summary:    Utilities for XML security C++ library
+Summary:    Utilities for Shibboleth XML Security C++ Library
 Group:      Development/Libraries/C and C++
 
 %description -n xml-security-c-bin
@@ -38,7 +39,7 @@ XPath and XSLT transforms.
 This package contains the utility programs.
 
 %package -n libxml-security-c20
-Summary:    Apache XML security C++ library
+Summary:    Shibboleth XML Security C++ Library
 Group:      Development/Libraries/C and C++
 Provides:   xml-security-c = %{version}-%{release}
 
@@ -51,7 +52,7 @@ XPath and XSLT transforms.
 This package contains just the shared library.
 
 %package -n libxml-security-c-devel
-Summary:	Development files for the Apache C++ XML security library
+Summary:	Development files for the Shibboleth C++ XML Security Library
 Group:		Development/Libraries/C and C++
 Requires:	libxml-security-c20 = %{version}-%{release}
 Requires:	openssl-devel
@@ -101,6 +102,9 @@ This package includes files needed for development with xml-security-c.
 %exclude %{_libdir}/*.la
 
 %changelog
+* Thu Jun 27 2024 Scott Cantor <cantor.2@osu.edu> 2.0.4-1
+- Adjust for migration to Shibboleth Project
+
 * Thu Oct 14 2021 Scott Cantor <cantor.2@osu.edu> 2.0.3-1
 - Bump version for OpenSSL 3 fix
 
