@@ -79,30 +79,6 @@
     <ClCompile Include="..\..\..\..\xsec\dsig\DSIGXPathHere.cpp">
       <Filter>dsig</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoHash.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoHashHMAC.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyDSA.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyHMAC.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyRSA.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoProvider.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoSymmetricKey.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\NSS\NSSCryptoX509.cpp">
-      <Filter>enc\NSS</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\enc\OpenSSL\OpenSSLCryptoBase64.cpp">
       <Filter>enc\OpenSSL</Filter>
     </ClCompile>
@@ -175,39 +151,6 @@
     <ClCompile Include="..\..\..\..\xsec\transformers\TXFMURL.cpp">
       <Filter>transformers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\transformers\TXFMXPath.cpp">
-      <Filter>transformers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\transformers\TXFMXPathFilter.cpp">
-      <Filter>transformers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\transformers\TXFMXSL.cpp">
-      <Filter>transformers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoHash.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoHashHMAC.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyDSA.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyHMAC.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyRSA.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoProvider.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoSymmetricKey.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoX509.cpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\xenc\impl\XENCAlgorithmHandlerDefault.cpp">
       <Filter>xenc\impl</Filter>
     </ClCompile>
@@ -234,123 +177,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\xenc\impl\XENCCipherImpl.cpp">
       <Filter>xenc\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSAuthenticationImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSCompoundRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSCompoundResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSKeyBindingAbstractTypeImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSLocateRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSLocateResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSMessageAbstractTypeImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSMessageFactoryImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSPendingRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSPrototypeKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSQueryKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSNotBoundAuthentication.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\XKMSConstants.cpp">
-      <Filter>xkms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRegisterRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRegisterResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSReissueKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSReissueRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSReissueResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRequestAbstractTypeImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSResponseMechanismImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRespondWithImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSResultTypeImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSRSAKeyPairImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSStatusImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSStatusRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSStatusResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSUnverifiedKeyBindingImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSUseKeyWithImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSValidateRequestImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSValidateResultImpl.cpp">
-      <Filter>xkms\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\xkms\impl\XKMSValidityIntervalImpl.cpp">
-      <Filter>xkms\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\enc\XSCrypt\XSCryptCryptoBase64.cpp">
       <Filter>enc\XSCrypt</Filter>
@@ -412,17 +238,11 @@
     <ClCompile Include="..\..\..\..\xsec\utils\XSECSafeBufferFormatter.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\utils\XSECSOAPRequestorSimple.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\utils\XSECTXFMInputSource.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\framework\XSECURIResolverXerces.cpp">
       <Filter>framework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\xsec\utils\winutils\XSECSOAPRequestorSimpleWin32.cpp">
-      <Filter>utils\winutils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\xsec\canon\XSECXMLNSStack.cpp">
       <Filter>canon</Filter>
@@ -513,33 +333,6 @@
     <ClInclude Include="..\..\..\..\xsec\dsig\DSIGXPathFilterExpr.hpp">
       <Filter>dsig</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\dsig\DSIGXPathHere.hpp">
-      <Filter>dsig</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoHash.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoHashHMAC.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyDSA.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyHMAC.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoKeyRSA.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoProvider.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoSymmetricKey.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\NSS\NSSCryptoX509.hpp">
-      <Filter>enc\NSS</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\xsec\enc\OpenSSL\OpenSSLCryptoBase64.hpp">
       <Filter>enc\OpenSSL</Filter>
     </ClInclude>
@@ -612,39 +405,6 @@
     <ClInclude Include="..\..\..\..\xsec\transformers\TXFMURL.hpp">
       <Filter>transformers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\transformers\TXFMXPath.hpp">
-      <Filter>transformers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\transformers\TXFMXPathFilter.hpp">
-      <Filter>transformers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\transformers\TXFMXSL.hpp">
-      <Filter>transformers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoHash.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoHashHMAC.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyDSA.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyHMAC.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoKeyRSA.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoProvider.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoSymmetricKey.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\enc\WinCAPI\WinCAPICryptoX509.hpp">
-      <Filter>enc\WinCAPI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\xsec\xenc\impl\XENCAlgorithmHandlerDefault.hpp">
       <Filter>xenc\impl</Filter>
     </ClInclude>
@@ -695,237 +455,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\xsec\xenc\XENCEncryptedType.hpp">
       <Filter>xenc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSAuthenticationImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSCompoundRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSCompoundResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSKeyBindingAbstractTypeImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSLocateRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSLocateResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSMessageAbstractTypeImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSMessageFactoryImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSNotBoundAuthenticationImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSPendingRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSPrototypeKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSQueryKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSAuthentication.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSCompoundRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSCompoundResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSConstants.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSKeyBindingAbstractType.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSLocateRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSLocateResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSMessageAbstractType.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSMessageFactory.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSNotBoundAuthentication.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSPendingRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSPrototypeKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSQueryKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRecoverKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRecoverRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRecoverResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRegisterRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRegisterResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSReissueKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSReissueRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSReissueResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRequestAbstractTypeImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSResponseMechanismImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRespondWithImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSResultTypeImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRevokeResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSRSAKeyPairImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSStatusImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSStatusRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRecoverResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRegisterRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRegisterResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSReissueKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSReissueRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSReissueResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRequestAbstractType.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRespondWith.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSResponseMechanism.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSResultType.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRevokeKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRevokeRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRevokeResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSRSAKeyPair.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSStatus.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSStatusRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSStatusResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSStatusResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSUnverifiedKeyBindingImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSUseKeyWithImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSValidateRequestImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSValidateResultImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\impl\XKMSValidityIntervalImpl.hpp">
-      <Filter>xkms\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSUnverifiedKeyBinding.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSUseKeyWith.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSValidateRequest.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSValidateResult.hpp">
-      <Filter>xkms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\xkms\XKMSValidityInterval.hpp">
-      <Filter>xkms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\xsec\enc\XSCrypt\XSCryptCryptoBase64.hpp">
       <Filter>enc\XSCrypt</Filter>
@@ -1023,12 +552,6 @@
     <ClInclude Include="..\..\..\..\xsec\utils\XSECSafeBufferFormatter.hpp">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\utils\XSECSOAPRequestor.hpp">
-      <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\xsec\utils\XSECSOAPRequestorSimple.hpp">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\xsec\utils\XSECTXFMInputSource.hpp">
       <Filter>utils</Filter>
     </ClInclude>
@@ -1070,12 +593,6 @@
     <Filter Include="xenc">
       <UniqueIdentifier>{f4e12750-f3b6-41c2-9f4b-2837b22d06e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="xkms">
-      <UniqueIdentifier>{54038a06-fb78-42e2-80df-8904d5a0af41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="xkms\impl">
-      <UniqueIdentifier>{a7cb870d-6b13-44fa-9c08-bbf7cf09dfdc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="xenc\impl">
       <UniqueIdentifier>{52aefa89-3367-41ec-b07a-671e8aaf870d}</UniqueIdentifier>
     </Filter>
@@ -1084,12 +601,6 @@
     </Filter>
     <Filter Include="enc\OpenSSL">
       <UniqueIdentifier>{6b7c3943-2e60-4597-8ad2-e7df9ab5f9ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="enc\NSS">
-      <UniqueIdentifier>{bbde8541-bc76-45c0-8168-3f2e59064b4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="enc\WinCAPI">
-      <UniqueIdentifier>{5b1a15dd-0ee2-4229-ac18-57521a131a2c}</UniqueIdentifier>
     </Filter>
     <Filter Include="framework">
       <UniqueIdentifier>{3b6fa0a5-df00-44e9-a4ad-522ef6c8d3eb}</UniqueIdentifier>
