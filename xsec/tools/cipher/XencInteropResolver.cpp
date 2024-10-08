@@ -56,16 +56,6 @@ XERCES_CPP_NAMESPACE_USE
 #   include <xsec/enc/OpenSSL/OpenSSLCryptoSymmetricKey.hpp>
 #endif
 
-#if defined (XSEC_HAVE_WINCAPI)
-#   include <xsec/enc/WinCAPI/WinCAPICryptoProvider.hpp>
-#   include <xsec/enc/WinCAPI/WinCAPICryptoSymmetricKey.hpp>
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-#   include <xsec/enc/NSS/NSSCryptoProvider.hpp>
-#   include <xsec/enc/NSS/NSSCryptoSymmetricKey.hpp>
-#endif
-
 // --------------------------------------------------------------------------------
 //           Merlin Xenc-Five keys and Strings
 // --------------------------------------------------------------------------------
@@ -511,8 +501,6 @@ XSECCryptoKey * XencInteropResolver::resolveKey(const DSIGKeyInfoList * lst) con
 
             if (XCX509 != 0) {
 #if defined (XSEC_HAVE_OPENSSL)
-
-
                 if (strEquals(XCX509->getProviderName(),DSIGConstants::s_unicodeStrPROVOpenSSL)) {
 
                     OpenSSLCryptoX509 * OSSLX509 = (OpenSSLCryptoX509 *) XCX509;
@@ -537,16 +525,6 @@ XSECCryptoKey * XencInteropResolver::resolveKey(const DSIGKeyInfoList * lst) con
                     return k;
 
                 }
-#if defined (XSEC_HAVE_WINCAPI)
-                else {
-#endif /* XSEC_HAVE_WINCAPI */
-#endif /* XSEC_HAVE_OPENSSL */
-
-#if defined (XSEC_HAVE_WINCAPI)
-                    std::cerr << "WARNING - Unable to load PKCS8 private key file into Windows CAPI" << std::endl;
-#if defined (XSEC_HAVE_OPENSSL)
-                }
-#endif /* XSEC_HAVE_WINCAPI */
 #endif /* XSEC_HAVE_OPENSSL */
             }
         }

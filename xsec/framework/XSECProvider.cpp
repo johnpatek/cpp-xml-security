@@ -34,10 +34,6 @@
 #include "../utils/XSECDOMUtils.hpp"
 #include "../xenc/impl/XENCCipherImpl.hpp"
 
-#ifdef XSEC_XKMS_ENABLED
-#  include "../xkms/impl/XKMSMessageFactoryImpl.hpp"
-#endif
-
 XERCES_CPP_NAMESPACE_USE
 
 // --------------------------------------------------------------------------------
@@ -47,21 +43,12 @@ XERCES_CPP_NAMESPACE_USE
 
 XSECProvider::XSECProvider() {
 
-    mp_URIResolver = new XSECURIResolverXerces();
-#ifdef XSEC_XKMS_ENABLED
-    XSECnew(mp_xkmsMessageFactory, XKMSMessageFactoryImpl());
-#endif
+    mp_URIResolver = NULL;
 }
 
 XSECProvider::~XSECProvider() {
 
-    if (mp_URIResolver != NULL)
-        delete mp_URIResolver;
-
-#ifdef XSEC_XKMS_ENABLED
-    // Clean up XKMS stuff
-    delete mp_xkmsMessageFactory;
-#endif
+    delete mp_URIResolver;
 }
 
 // --------------------------------------------------------------------------------
@@ -134,15 +121,6 @@ void XSECProvider::releaseCipher(XENCCipher* toRelease) {
     delete toRelease;
 }
 
-#ifdef XSEC_XKMS_ENABLED
-// --------------------------------------------------------------------------------
-//           XKMS Methods
-// --------------------------------------------------------------------------------
-
-XKMSMessageFactory* XSECProvider::getXKMSMessageFactory() {
-    return mp_xkmsMessageFactory;
-}
-#endif
 
 // --------------------------------------------------------------------------------
 //           Environmental methods

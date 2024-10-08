@@ -83,17 +83,8 @@ struct XSECNodeListElt {
 
 class XSEC_EXPORT XSECC14n20010315 : public XSECCanon {
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<char *>				CharListVectorType;
-#else
 	typedef std::vector<char *>			CharListVectorType;
-#endif
-
-#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
-	typedef std::size_t		size_type;
-#else
 	typedef size_t			size_type;
-#endif
 
 
 public:

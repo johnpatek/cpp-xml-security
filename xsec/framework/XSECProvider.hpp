@@ -32,7 +32,6 @@
 #include <xsec/utils/XSECPlatformUtils.hpp>
 #include <xsec/dsig/DSIGSignature.hpp>
 #include <xsec/xenc/XENCCipher.hpp>
-#include <xsec/xkms/XKMSMessageFactory.hpp>
 
 #include <vector>
 
@@ -183,24 +182,6 @@ public:
 
     //@}
 
-#ifdef XSEC_XKMS_ENABLED
-    /** @name XKMS Functions */
-    //@{
-
-    /**
-     * \brief Obtain a pointer to the XKMSMessageFactory.
-     *
-     * The XKMSMessageFactory is used to create and manipulate XKMS messages.
-     *
-     * @note Unlike other objects created by the provider, only one
-     * XKMSMessageFactory is ever instantiated for a particular provider.
-     * Applications should <b>never</b> delete the Factory, as it is taken
-     * care of by the provider.
-     */
-
-    XKMSMessageFactory* getXKMSMessageFactory(void);
-#endif
-
     /** @name Environmental Options */
     //@{
 
@@ -230,10 +211,6 @@ private:
 
     void setup(DSIGSignature* sig);
     void setup(XENCCipher* cipher);
-
-#ifdef XSEC_XKMS_ENABLED
-    XKMSMessageFactory* mp_xkmsMessageFactory;
-#endif
 
     XSECURIResolver* mp_URIResolver;
 };

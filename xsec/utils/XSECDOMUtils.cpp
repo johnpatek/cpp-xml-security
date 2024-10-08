@@ -29,7 +29,6 @@
 // XSEC
 
 #include <xsec/framework/XSECError.hpp>
-#include <xsec/xkms/XKMSConstants.hpp>
 
 #include "XSECDOMUtils.hpp"
 
@@ -111,18 +110,6 @@ const XMLCh * getXENC11LocalName(const DOMNode *node) {
 
 }
 
-#ifdef XSEC_XKMS_ENABLED
-const XMLCh * getXKMSLocalName(const DOMNode *node) {
-
-	// XKMS namespace node
-
-	if (!strEquals(node->getNamespaceURI(), XKMSConstants::s_unicodeStrURIXKMS))
-		return NULL;
-	else
-		return node->getLocalName();
-
-}
-#endif
 
 // --------------------------------------------------------------------------------
 //           Find a nominated DSIG node in a document

@@ -77,9 +77,7 @@ const XMLCh XSEC_EXPORT * getECLocalName(const XERCES_CPP_NAMESPACE_QUALIFIER DO
 const XMLCh XSEC_EXPORT * getXPFLocalName(const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode *node);
 const XMLCh XSEC_EXPORT * getXENCLocalName(const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode *node);
 const XMLCh XSEC_EXPORT * getXENC11LocalName(const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode *node);
-#ifdef XSEC_XKMS_ENABLED
-const XMLCh XSEC_EXPORT * getXKMSLocalName(const XERCES_CPP_NAMESPACE_QUALIFIER DOMNode *node);
-#endif
+
 // --------------------------------------------------------------------------------
 //           Do UTF-8 <-> UTF-16 transcoding
 // --------------------------------------------------------------------------------

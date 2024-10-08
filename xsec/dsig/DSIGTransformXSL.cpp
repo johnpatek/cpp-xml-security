@@ -33,7 +33,6 @@
 #include <xsec/framework/XSECEnv.hpp>
 #include <xsec/framework/XSECError.hpp>
 #include <xsec/framework/XSECException.hpp>
-#include <xsec/transformers/TXFMXSL.hpp>
 #include <xsec/transformers/TXFMC14n.hpp>
 #include <xsec/transformers/TXFMChain.hpp>
 
@@ -112,39 +111,8 @@ DSIGTransformXSL::~DSIGTransformXSL() {};
 void DSIGTransformXSL::appendTransformer(TXFMChain * input) {
 
 
-#ifndef XSEC_HAVE_XSLT
-
 	throw XSECException(XSECException::UnsupportedFunction,
 		"XSLT Transforms not supported in this compilation of the library");
-#else
-
-	if (mp_stylesheetNode == 0)
-		throw XSECException(XSECException::XSLError, "Style Sheet not found for XSL Transform");
-
-
-	TXFMBase * nextInput;
-
-	// XSLT Transform - requires a byte stream input
-	
-	if (input->getLastTxfm()->getOutputType() == TXFMBase::DOM_NODES) {
-		
-		// Use c14n to translate to BYTES
-		
-		XSECnew(nextInput, TXFMC14n(mp_txfmNode->getOwnerDocument()));
-		input->appendTxfm(nextInput);
-	}
-
-	TXFMXSL * x;
-	
-	// Create the XSLT transform
-	XSECnew(x, TXFMXSL(mp_txfmNode->getOwnerDocument()));
-	input->appendTxfm(x);
-	
-	// Patch to avoid c14n of stylesheet
-	XSECDomToSafeBuffer sbStyleSheet(mp_stylesheetNode);
-	x->evaluateStyleSheet(sbStyleSheet);
-#endif /* XSEC_HAVE_XSLT */
-
 }
 
 

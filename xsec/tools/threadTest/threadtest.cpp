@@ -37,11 +37,7 @@
 #if defined (XSEC_HAVE_OPENSSL)
 #	include <xsec/enc/OpenSSL/OpenSSLCryptoKeyHMAC.hpp>
 #else
-#	if defined (XSEC_HAVE_WINCAPI)
-#		include <xsec/enc/WinCAPI/WinCAPICryptoKeyHMAC.hpp>
-#	else
-#		error No crypto provider available
-#	endif
+#	error No crypto provider available
 #endif
 
 #include "../../utils/XSECDOMUtils.hpp"
@@ -263,12 +259,10 @@ DWORD WINAPI doSignThread (LPVOID Param) {
 
 #if defined (XSEC_HAVE_OPENSSL)
 		OpenSSLCryptoKeyHMAC * hmacKey = new OpenSSLCryptoKeyHMAC();
-#else
-		WinCAPICryptoKeyHMAC * hmacKey = new WinCAPICryptoKeyHMAC(0);
-#endif
 		hmacKey->setKey((unsigned char *) "secret", (unsigned int) strlen("secret"));
 		sig->setSigningKey(hmacKey);
 		sig->sign();
+#endif
 
 		g_provider->releaseSignature(sig);
 		
@@ -377,10 +371,6 @@ DWORD WINAPI doVerifyThread (LPVOID Param) {
 
 #if defined (XSEC_HAVE_OPENSSL)
 		OpenSSLCryptoKeyHMAC *hmacKey = new OpenSSLCryptoKeyHMAC();
-#else
-		WinCAPICryptoKeyHMAC *hmacKey = new WinCAPICryptoKeyHMAC(0);
-#endif
-
 		hmacKey->setKey((unsigned char *) secretKey, (unsigned int) strlen(secretKey));
 		sig->setSigningKey(hmacKey);
 		sig->load();
@@ -390,6 +380,7 @@ DWORD WINAPI doVerifyThread (LPVOID Param) {
 			g_errors++;
 			g_initMutex.unlock();
 		}
+#endif
 
 		g_provider->releaseSignature(sig);
 

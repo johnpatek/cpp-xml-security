@@ -94,13 +94,7 @@ struct XSECNameSpaceEntry {
 
 class XSEC_EXPORT XSECNameSpaceExpander {
 
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XSECNameSpaceEntry *>			NameSpaceEntryListVectorType;
-#else
 	typedef std::vector<XSECNameSpaceEntry *>		NameSpaceEntryListVectorType;
-#endif
-
 
 public:
 

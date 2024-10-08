@@ -21,8 +21,8 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 noinst_PROGRAMS = ${samples}
 bin_PROGRAMS = ${tools}
 
-AM_CXXFLAGS += $(xerces_CXXFLAGS) $(xalan_CXXFLAGS)
-LDADD = libxml-security-c.la $(xerces_LIBS) $(xalan_LIBS)
+AM_CXXFLAGS += $(xerces_CXXFLAGS)
+LDADD = libxml-security-c.la $(xerces_LIBS)
 
 #
 # The following are sample programs.  They are NOT installed
@@ -84,10 +84,8 @@ xsec_xtest_SOURCES = \
    tools/xtest/xtest.cpp
 xsec_xtest_CPPFLAGS = $(AM_CPPFLAGS) -DXSEC_BUILDING_TOOLS
 xsec_xtest_CXXFLAGS = $(AM_CXXFLAGS) \
-   $(nss_CFLAGS) \
    $(openssl_CFLAGS)
 xsec_xtest_LDADD = $(LDADD) \
-   $(nss_LIBS) \
    $(openssl_LIBS)
 
 tools += xsec-c14n
@@ -104,10 +102,8 @@ xsec_checksig_SOURCES = \
    tools/checksig/InteropResolver.cpp
 xsec_checksig_CPPFLAGS = $(AM_CPPFLAGS) -DXSEC_BUILDING_TOOLS
 xsec_checksig_CXXFLAGS = $(AM_CXXFLAGS) \
-   $(nss_CFLAGS) \
    $(openssl_CFLAGS)
 xsec_checksig_LDADD = $(LDADD) \
-   $(nss_LIBS) \
    $(openssl_LIBS)
 
 tools += xsec-templatesign
@@ -136,38 +132,20 @@ xsec_cipher_SOURCES = \
    tools/cipher/XencInteropResolver.cpp
 xsec_cipher_CPPFLAGS = $(AM_CPPFLAGS) -DXSEC_BUILDING_TOOLS
 xsec_cipher_CXXFLAGS = $(AM_CXXFLAGS) \
-   $(nss_CFLAGS) \
    $(openssl_CFLAGS)
 xsec_cipher_LDADD = $(LDADD) \
-   $(nss_LIBS) \
    $(openssl_LIBS)
-
-if XSEC_AM_HAVE_XKMS
-tools += xsec-xklient
-xsec_xklient_SOURCES = \
-   tools/xklient/xklient.cpp \
-   enc/OpenSSL/OpenSSLSupport.hpp
-xsec_xklient_CPPFLAGS = $(AM_CPPFLAGS) -DXSEC_BUILDING_TOOLS
-xsec_xklient_CXXFLAGS = $(AM_CXXFLAGS) \
-   $(openssl_CFLAGS)
-xsec_xklient_LDADD = $(LDADD) \
-   $(openssl_LIBS)
-endif
 
 libxml_security_c_la_CPPFLAGS = $(AM_CPPFLAGS) -DXSEC_BUILDING_LIBRARY
 
 libxml_security_c_la_CXXFLAGS = \
-   $(xalan_CXXFLAGS) \
    $(xerces_CXXFLAGS) \
    $(openssl_CFLAGS) \
-   $(nss_CFLAGS) \
    $(PTHREAD_CFLAGS)
 
 libxml_security_c_la_LIBADD = \
-   $(xalan_LIBS) \
    $(xerces_LIBS) \
    $(openssl_LIBS) \
-   $(nss_LIBS) \
    $(PTHREAD_LIBS)
 
 lib_LTLIBRARIES = libxml-security-c.la
@@ -177,14 +155,12 @@ canonincludedir = $(includedir)/xsec/canon
 encincludedir = $(includedir)/xsec/enc
 xscryptincludedir = $(includedir)/xsec/enc/XSCrypt
 opensslincludedir = $(includedir)/xsec/enc/OpenSSL
-nssincludedir = $(includedir)/xsec/enc/NSS
 dsigincludedir = $(includedir)/xsec/dsig
 frameworkincludedir = $(includedir)/xsec/framework
 transformersincludedir = $(includedir)/xsec/transformers
 utilsincludedir = $(includedir)/xsec/utils
 unixutilsincludedir = $(includedir)/xsec/utils/unixutils
 xencincludedir = $(includedir)/xsec/xenc
-xkmsincludedir = $(includedir)/xsec/xkms
 
 
 # The required include files
@@ -235,19 +211,8 @@ opensslinclude_HEADERS = \
   enc/OpenSSL/OpenSSLCryptoHash.hpp \
   enc/OpenSSL/OpenSSLSupport.hpp
 
-nssinclude_HEADERS = \
-  enc/NSS/NSSCryptoX509.hpp \
-  enc/NSS/NSSCryptoHashHMAC.hpp \
-  enc/NSS/NSSCryptoKeyDSA.hpp \
-  enc/NSS/NSSCryptoKeyHMAC.hpp \
-  enc/NSS/NSSCryptoHash.hpp \
-  enc/NSS/NSSCryptoSymmetricKey.hpp \
-  enc/NSS/NSSCryptoProvider.hpp \
-  enc/NSS/NSSCryptoKeyRSA.hpp 
-
 dsiginclude_HEADERS = \
   dsig/DSIGKeyInfoSPKIData.hpp \
-  dsig/DSIGXPathHere.hpp \
   dsig/DSIGAlgorithmHandlerDefault.hpp \
   dsig/DSIGXPathFilterExpr.hpp \
   dsig/DSIGKeyInfoX509.hpp \
@@ -291,7 +256,6 @@ nodist_frameworkinclude_HEADERS = \
   framework/XSECConfig.hpp
 
 transformersinclude_HEADERS = \
-  transformers/TXFMXPathFilter.hpp \
   transformers/TXFMHash.hpp \
   transformers/TXFMParser.hpp \
   transformers/TXFMOutputFile.hpp \
@@ -305,16 +269,12 @@ transformersinclude_HEADERS = \
   transformers/TXFMConcatChains.hpp \
   transformers/TXFMSB.hpp \
   transformers/TXFMC14n.hpp \
-  transformers/TXFMXSL.hpp \
-  transformers/TXFMXPath.hpp \
   transformers/TXFMBase64.hpp
 
 utilsinclude_HEADERS = \
   utils/XSECSafeBuffer.hpp \
-  utils/XSECSOAPRequestor.hpp \
   utils/XSECTXFMInputSource.hpp \
   utils/XSECNameSpaceExpander.hpp \
-  utils/XSECSOAPRequestorSimple.hpp \
   utils/XSECXPathNodeList.hpp \
   utils/XSECSafeBufferFormatter.hpp \
   utils/XSECBinTXFMInputStream.hpp \
@@ -329,47 +289,6 @@ xencinclude_HEADERS = \
   xenc/XENCEncryptedData.hpp \
   xenc/XENCCipherReference.hpp \
   xenc/XENCCipher.hpp
-
-xkmsinclude_HEADERS = \
-  xkms/XKMSNotBoundAuthentication.hpp \
-  xkms/XKMSValidateResult.hpp \
-  xkms/XKMSValidityInterval.hpp \
-  xkms/XKMSStatusRequest.hpp \
-  xkms/XKMSRegisterRequest.hpp \
-  xkms/XKMSPendingRequest.hpp \
-  xkms/XKMSCompoundRequest.hpp \
-  xkms/XKMSUseKeyWith.hpp \
-  xkms/XKMSValidateRequest.hpp \
-  xkms/XKMSUnverifiedKeyBinding.hpp \
-  xkms/XKMSLocateResult.hpp \
-  xkms/XKMSRespondWith.hpp \
-  xkms/XKMSQueryKeyBinding.hpp \
-  xkms/XKMSPrototypeKeyBinding.hpp \
-  xkms/XKMSKeyBindingAbstractType.hpp \
-  xkms/XKMSMessageAbstractType.hpp \
-  xkms/XKMSMessageFactory.hpp \
-  xkms/XKMSConstants.hpp \
-  xkms/XKMSRequestAbstractType.hpp \
-  xkms/XKMSResult.hpp \
-  xkms/XKMSAuthentication.hpp \
-  xkms/XKMSLocateRequest.hpp \
-  xkms/XKMSResultType.hpp \
-  xkms/XKMSStatusResult.hpp \
-  xkms/XKMSKeyBinding.hpp \
-  xkms/XKMSCompoundResult.hpp \
-  xkms/XKMSRegisterResult.hpp \
-  xkms/XKMSResponseMechanism.hpp \
-  xkms/XKMSStatus.hpp \
-  xkms/XKMSRevokeRequest.hpp \
-  xkms/XKMSRevokeResult.hpp \
-  xkms/XKMSRecoverKeyBinding.hpp \
-  xkms/XKMSRevokeKeyBinding.hpp \
-  xkms/XKMSRSAKeyPair.hpp \
-  xkms/XKMSRecoverResult.hpp \
-  xkms/XKMSReissueResult.hpp \
-  xkms/XKMSRecoverRequest.hpp \
-  xkms/XKMSReissueRequest.hpp \
-  xkms/XKMSReissueKeyBinding.hpp
 
 
 libxml_security_c_la_SOURCES = ${lib_sources}
@@ -404,21 +323,12 @@ lib_sources += ${utils_sources}
 
 lib_sources += ${xenc_sources}
 
-# XML Key Management
-if XSEC_AM_HAVE_XKMS
-  lib_sources += ${xkms_sources}
-endif
-
 #
 # The following blocks are conditionally added on the basis
 # of selections made during the "configure" operation
 
 if XSEC_AM_HAVE_OPENSSL
   lib_sources += ${openssl_sources}
-endif
-
-if XSEC_AM_HAVE_NSS
-  lib_sources += ${nss_sources}
 endif
 
 # Sources are build up using a find command:
@@ -439,7 +349,6 @@ dsig_sources = \
   dsig/DSIGReferenceList.cpp \
   dsig/DSIGKeyInfoValue.cpp \
   dsig/DSIGKeyInfoDEREncoded.cpp \
-  dsig/DSIGXPathHere.cpp \
   dsig/DSIGAlgorithmHandlerDefault.cpp \
   dsig/DSIGXPathFilterExpr.cpp \
   dsig/DSIGKeyInfoMgmtData.cpp \
@@ -490,13 +399,10 @@ txfm_sources = \
   transformers/TXFMSB.cpp \
   transformers/TXFMEnvelope.cpp \
   transformers/TXFMBase64.cpp \
-  transformers/TXFMXPathFilter.cpp \
   transformers/TXFMHash.cpp \
   transformers/TXFMC14n.cpp \
   transformers/TXFMURL.cpp \
   transformers/TXFMOutputFile.cpp \
-  transformers/TXFMXPath.cpp \
-  transformers/TXFMXSL.cpp \
   transformers/TXFMDocObject.cpp \
   transformers/TXFMConcatChains.cpp \
   transformers/TXFMChar.cpp
@@ -518,9 +424,7 @@ utils_sources = \
   utils/XSECDOMUtils.cpp \
   utils/XSECSafeBufferFormatter.cpp \
   utils/XSECNameSpaceExpander.cpp \
-  utils/XSECPlatformUtils.cpp \
-  utils/XSECSOAPRequestorSimple.cpp \
-  utils/unixutils/XSECSOAPRequestorSimpleUnix.cpp
+  utils/XSECPlatformUtils.cpp
 
 # XML Encryption
 
@@ -544,86 +448,6 @@ xenc_sources = \
   xenc/impl/XENCEncryptedKeyImpl.cpp \
   xenc/impl/XENCCipherReferenceImpl.hpp
 
-# XML Key Management
-xkms_sources = \
-  xkms/XKMSConstants.cpp \
-  xkms/impl/XKMSCompoundRequestImpl.cpp \
-  xkms/impl/XKMSRevokeKeyBindingImpl.hpp \
-  xkms/impl/XKMSRecoverRequestImpl.cpp \
-  xkms/impl/XKMSRegisterResultImpl.cpp \
-  xkms/impl/XKMSRecoverResultImpl.cpp \
-  xkms/impl/XKMSValidateResultImpl.hpp \
-  xkms/impl/XKMSRevokeResultImpl.hpp \
-  xkms/impl/XKMSCompoundResultImpl.cpp \
-  xkms/impl/XKMSRevokeKeyBindingImpl.cpp \
-  xkms/impl/XKMSCompoundResultImpl.hpp \
-  xkms/impl/XKMSUnverifiedKeyBindingImpl.hpp \
-  xkms/impl/XKMSKeyBindingAbstractTypeImpl.cpp \
-  xkms/impl/XKMSQueryKeyBindingImpl.hpp \
-  xkms/impl/XKMSPrototypeKeyBindingImpl.cpp \
-  xkms/impl/XKMSValidateResultImpl.cpp \
-  xkms/impl/XKMSRSAKeyPairImpl.hpp \
-  xkms/impl/XKMSAuthenticationImpl.cpp \
-  xkms/impl/XKMSNotBoundAuthenticationImpl.hpp \
-  xkms/impl/XKMSCompoundRequestImpl.hpp \
-  xkms/impl/XKMSPendingRequestImpl.hpp \
-  xkms/impl/XKMSStatusResultImpl.cpp \
-  xkms/impl/XKMSStatusImpl.hpp \
-  xkms/impl/XKMSRegisterRequestImpl.hpp \
-  xkms/impl/XKMSReissueRequestImpl.cpp \
-  xkms/impl/XKMSKeyBindingImpl.cpp \
-  xkms/impl/XKMSUseKeyWithImpl.hpp \
-  xkms/impl/XKMSRequestAbstractTypeImpl.cpp \
-  xkms/impl/XKMSRespondWithImpl.cpp \
-  xkms/impl/XKMSResponseMechanismImpl.hpp \
-  xkms/impl/XKMSResultImpl.hpp \
-  xkms/impl/XKMSReissueResultImpl.cpp \
-  xkms/impl/XKMSAuthenticationImpl.hpp \
-  xkms/impl/XKMSMessageAbstractTypeImpl.cpp \
-  xkms/impl/XKMSRevokeResultImpl.cpp \
-  xkms/impl/XKMSStatusResultImpl.hpp \
-  xkms/impl/XKMSReissueKeyBindingImpl.hpp \
-  xkms/impl/XKMSRespondWithImpl.hpp \
-  xkms/impl/XKMSRevokeRequestImpl.cpp \
-  xkms/impl/XKMSPendingRequestImpl.cpp \
-  xkms/impl/XKMSRecoverResultImpl.hpp \
-  xkms/impl/XKMSValidateRequestImpl.cpp \
-  xkms/impl/XKMSStatusRequestImpl.hpp \
-  xkms/impl/XKMSRecoverRequestImpl.hpp \
-  xkms/impl/XKMSRecoverKeyBindingImpl.cpp \
-  xkms/impl/XKMSRSAKeyPairImpl.cpp \
-  xkms/impl/XKMSMessageAbstractTypeImpl.hpp \
-  xkms/impl/XKMSUnverifiedKeyBindingImpl.cpp \
-  xkms/impl/XKMSValidityIntervalImpl.hpp \
-  xkms/impl/XKMSLocateResultImpl.hpp \
-  xkms/impl/XKMSLocateRequestImpl.cpp \
-  xkms/impl/XKMSResultTypeImpl.cpp \
-  xkms/impl/XKMSRecoverKeyBindingImpl.hpp \
-  xkms/impl/XKMSResultImpl.cpp \
-  xkms/impl/XKMSValidityIntervalImpl.cpp \
-  xkms/impl/XKMSRegisterRequestImpl.cpp \
-  xkms/impl/XKMSReissueResultImpl.hpp \
-  xkms/impl/XKMSStatusImpl.cpp \
-  xkms/impl/XKMSReissueRequestImpl.hpp \
-  xkms/impl/XKMSStatusRequestImpl.cpp \
-  xkms/impl/XKMSReissueKeyBindingImpl.cpp \
-  xkms/impl/XKMSKeyBindingImpl.hpp \
-  xkms/impl/XKMSValidateRequestImpl.hpp \
-  xkms/impl/XKMSKeyBindingAbstractTypeImpl.hpp \
-  xkms/impl/XKMSResultTypeImpl.hpp \
-  xkms/impl/XKMSMessageFactoryImpl.cpp \
-  xkms/impl/XKMSRevokeRequestImpl.hpp \
-  xkms/impl/XKMSResponseMechanismImpl.cpp \
-  xkms/impl/XKMSNotBoundAuthentication.cpp \
-  xkms/impl/XKMSLocateRequestImpl.hpp \
-  xkms/impl/XKMSLocateResultImpl.cpp \
-  xkms/impl/XKMSRequestAbstractTypeImpl.hpp \
-  xkms/impl/XKMSQueryKeyBindingImpl.cpp \
-  xkms/impl/XKMSUseKeyWithImpl.cpp \
-  xkms/impl/XKMSMessageFactoryImpl.hpp \
-  xkms/impl/XKMSPrototypeKeyBindingImpl.hpp \
-  xkms/impl/XKMSRegisterResultImpl.hpp
-  
 # Conditional crypto routines
 
 openssl_sources = \
@@ -639,36 +463,8 @@ openssl_sources = \
   enc/OpenSSL/OpenSSLCryptoKeyHMAC.cpp \
   enc/OpenSSL/OpenSSLSupport.cpp
 
-nss_sources = \
-  enc/NSS/NSSCryptoX509.cpp \
-  enc/NSS/NSSCryptoHashHMAC.cpp \
-  enc/NSS/NSSCryptoHash.cpp \
-  enc/NSS/NSSCryptoKeyDSA.cpp \
-  enc/NSS/NSSCryptoProvider.cpp \
-  enc/NSS/NSSCryptoSymmetricKey.cpp \
-  enc/NSS/NSSCryptoKeyRSA.cpp \
-  enc/NSS/NSSCryptoKeyHMAC.cpp
-
 #
 # Now the library specific build items
 #
-libxml_security_c_la_LDFLAGS = -version-info 20:4:0
+libxml_security_c_la_LDFLAGS = -version-info 30:0:0
 
-EXTRA_DIST = \
-  utils/winutils/XSECSOAPRequestorSimpleWin32.cpp \
-  enc/WinCAPI/WinCAPICryptoProvider.cpp \
-  enc/WinCAPI/WinCAPICryptoKeyHMAC.hpp \
-  enc/WinCAPI/WinCAPICryptoHash.cpp \
-  enc/WinCAPI/WinCAPICryptoKeyDSA.cpp \
-  enc/WinCAPI/WinCAPICryptoHashHMAC.hpp \
-  enc/WinCAPI/WinCAPICryptoKeyDSA.hpp \
-  enc/WinCAPI/WinCAPICryptoSymmetricKey.hpp \
-  enc/WinCAPI/WinCAPICryptoX509.hpp \
-  enc/WinCAPI/WinCAPICryptoKeyRSA.hpp \
-  enc/WinCAPI/WinCAPICryptoX509.cpp \
-  enc/WinCAPI/WinCAPICryptoHashHMAC.cpp \
-  enc/WinCAPI/WinCAPICryptoHash.hpp \
-  enc/WinCAPI/WinCAPICryptoKeyRSA.cpp \
-  enc/WinCAPI/WinCAPICryptoProvider.hpp \
-  enc/WinCAPI/WinCAPICryptoSymmetricKey.cpp \
-  enc/WinCAPI/WinCAPICryptoKeyHMAC.cpp

@@ -86,22 +86,6 @@ using std::cout;
 using std::endl;
 using std::ostream;
 
-#ifdef XSEC_HAVE_XALAN
-
-// XALAN
-
-#include <xalanc/XPath/XPathEvaluator.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XalanTransformer)
-
-#endif
 
 #if defined (XSEC_HAVE_OPENSSL)
 // OpenSSL
@@ -115,25 +99,7 @@ XALAN_USING_XALAN(XalanTransformer)
 
 #endif
 
-#if defined (XSEC_HAVE_WINCAPI)
-
-#   include <xsec/enc/WinCAPI/WinCAPICryptoProvider.hpp>
-#   include <xsec/enc/WinCAPI/WinCAPICryptoSymmetricKey.hpp>
-#   include <xsec/enc/WinCAPI/WinCAPICryptoKeyHMAC.hpp>
-
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-
-#   include <xsec/enc/NSS/NSSCryptoProvider.hpp>
-#   include <xsec/enc/NSS/NSSCryptoSymmetricKey.hpp>
-#   include <xsec/enc/NSS/NSSCryptoKeyHMAC.hpp>
-
-#endif
-
 #include <time.h>
-
-#ifndef XSEC_HAVE_XALAN
 
 std::ostream& operator<< (std::ostream& target, const XMLCh * s)
 {
@@ -142,8 +108,6 @@ std::ostream& operator<< (std::ostream& target, const XMLCh * s)
     XSEC_RELEASE_XMLCH(p);
     return target;
 }
-
-#endif
 
 // ----------------------------------------------------------------------------
 //           Checksig
@@ -178,23 +142,10 @@ void printUsage(void) {
     cerr << "                  <filename> - for X509 PEM files (must be an RSA KEK certificate\n";
     cerr << "                  <filename> <password> - for RSA private key files (MUST be a KEK)\n";
     cerr << "                  <key-string> - For a string to use as the key for AES or DES keys\n";
-#ifdef XSEC_XKMS_ENABLED
-    cerr << "     --xkms/-x\n";
-    cerr << "         The key that follows on the command line is to be interpreted as\n";
-    cerr << "         an XKMS RSAKeyPair encryption key\n";
-#endif
     cerr << "     --interop/-i\n";
     cerr << "         Use the interop resolver for Baltimore interop examples\n";
     cerr << "     --out-file/-o\n";
     cerr << "         Output the result to the indicated file (rather than stdout)\n";
-#ifdef XSEC_HAVE_WINCAPI
-    cerr << "     --wincapi/-w\n";
-    cerr << "         Force use of Windows Crypto API\n";
-#endif
-#ifdef XSEC_HAVE_NSS
-    cerr << "     --nss/-n\n";
-    cerr << "         Force use of NSS Crypto API\n";
-#endif
 
     cerr << "\n     Exits with codes :\n";
     cerr << "         0 = Decrypt/Encrypt OK\n";
@@ -215,9 +166,6 @@ int evaluate(int argc, char ** argv) {
     bool                    encryptFileAsData = false;
     bool                    parseXMLInput = true;
     bool                    doXMLOutput = false;
-#ifdef XSEC_XKMS_ENABLED
-    bool                    isXKMSKey = false;
-#endif
     XSECCryptoKey           * kek = NULL;
     XSECCryptoKey           * key = NULL;
     int                     keyLen = 0;
@@ -226,15 +174,6 @@ int evaluate(int argc, char ** argv) {
     DOMDocument             *doc;
     unsigned char           keyBuf[24];
     XMLFormatTarget         *formatTarget ;
-
-#if defined(_WIN32) && defined (XSEC_HAVE_WINCAPI)
-    HCRYPTPROV              win32DSSCSP = 0;        // Crypto Providers
-    HCRYPTPROV              win32RSACSP = 0;
-
-    CryptAcquireContext(&win32DSSCSP, NULL, NULL, PROV_DSS, CRYPT_VERIFYCONTEXT);
-    CryptAcquireContext(&win32RSACSP, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
-
-#endif
 
     if (argc < 2) {
 
@@ -284,28 +223,6 @@ int evaluate(int argc, char ** argv) {
             outfile = argv[paramCount];
             paramCount++;
         }
-#ifdef XSEC_XKMS_ENABLED
-        else if (_stricmp(argv[paramCount], "--xkms") == 0 || _stricmp(argv[paramCount], "-x") == 0) {
-            paramCount++;
-            isXKMSKey = true;
-        }
-#endif
-#ifdef XSEC_HAVE_WINCAPI
-        else if (_stricmp(argv[paramCount], "--wincapi") == 0 || _stricmp(argv[paramCount], "-w") == 0) {
-            // Use the interop key resolver
-            WinCAPICryptoProvider * cp = new WinCAPICryptoProvider();
-            XSECPlatformUtils::SetCryptoProvider(cp);
-            paramCount++;
-        }
-#endif
-#ifdef XSEC_HAVE_NSS
-        else if (_stricmp(argv[paramCount], "--nss") == 0 || _stricmp(argv[paramCount], "-n") == 0) {
-            // NSS Crypto Provider
-            NSSCryptoProvider * cp = new NSSCryptoProvider();
-            XSECPlatformUtils::SetCryptoProvider(cp);
-            paramCount++;
-        }
-#endif
         else if (_stricmp(argv[paramCount], "--key") == 0 || _stricmp(argv[paramCount], "-k") == 0) {
 
             // Have a key!
@@ -392,20 +309,10 @@ int evaluate(int argc, char ** argv) {
                 XSECCryptoSymmetricKey * sk = 
                     XSECPlatformUtils::g_cryptoProvider->keySymmetric(loadKeyAs);
 
-#ifdef XSEC_XKMS_ENABLED
-                if (isXKMSKey) {
-                    unsigned char kbuf[XSEC_MAX_HASH_SIZE];
-                    CalculateXKMSKEK((unsigned char *) argv[paramCount], (int) strlen(argv[paramCount]), kbuf, XSEC_MAX_HASH_SIZE);
-                    sk->setKey(kbuf, keyLen);
-                }
-                else {
-#endif
-                    memset(keyStr, 0, 64);
-                    strcpy((char *) keyStr, argv[paramCount]);
-                    sk->setKey(keyStr, keyLen);
-#ifdef XSEC_XKMS_ENABLED
-                }
-#endif
+                memset(keyStr, 0, 64);
+                strcpy((char *) keyStr, argv[paramCount]);
+                sk->setKey(keyStr, keyLen);
+
                 paramCount++;
                 if (isKEK)
                     kek = sk;
@@ -851,10 +758,6 @@ int main(int argc, char **argv) {
     try {
 
         XMLPlatformUtils::Initialize();
-#ifdef XSEC_HAVE_XALAN
-        XPathEvaluator::initialize();
-        XalanTransformer::initialize();
-#endif
         XSECPlatformUtils::Initialise();
 
     }
@@ -869,10 +772,6 @@ int main(int argc, char **argv) {
     retResult = evaluate(argc, argv);
 
     XSECPlatformUtils::Terminate();
-#ifdef XSEC_HAVE_XALAN
-    XalanTransformer::terminate();
-    XPathEvaluator::terminate();
-#endif
     XMLPlatformUtils::Terminate();
 
 #if defined (_DEBUG) && defined (_MSC_VER)

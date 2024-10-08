@@ -17,7 +17,7 @@
 
 # Process this file with autoreconf
 AC_PREREQ(2.50)
-AC_INIT([[XML-Security-C]],[2.0.4],[dev@shibboleth.net],[xml-security-c])
+AC_INIT([[XML-Security-C]],[3.0.0],[dev@shibboleth.net],[xml-security-c])
 AC_CONFIG_SRCDIR(xsec)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
@@ -95,77 +95,6 @@ xerces_CXXFLAGS=$xerces_CFLAGS
 xerces_CFLAGS=""
 AC_SUBST([xerces_CXXFLAGS])
 
-# Get user options
-
-AC_ARG_WITH(xalan, 
-    AS_HELP_STRING([--with-xalan],[Enable Xalan integration.  Values = 'yes' or installation directory (Default = yes)]), 
-    use_xalan=$withval, use_xalan=yes)
-
-if test x"$use_xalan" != "xyes" ; then
-  if test x"$use_xalan" != "xno" ; then
-    XALANCROOT=$use_xalan
-  fi
-fi
-
-# Now check for Xalan
-
-if test x"$use_xalan" != x"no" ; then
-
-  if test $XALANCROOT; then
-
-    AC_MSG_NOTICE([looking for Xalan headers in $XALANCROOT])
-
-    # Updated to include nls/include as this is generally needed for
-    # compilation against non-installed xalan.
-    # Also now include XALANCROOT/include to cater for installed xalan
-    xalan_CXXFLAGS="-I${XALANCROOT}/src -I${XALANCROOT}/include -I${XALANCROOT}/nls/include"
-    xalan_LIBS="-L${XALANCROOT}/lib -lxalan-c"
-    AX_SAVE_FLAGS_WITH_PREFIX([xalan],[[CXXFLAGS]])
-    AC_CHECK_HEADER([xalanc/Include/XalanVersion.hpp],
-                    [xalan_found=yes])
-    AX_RESTORE_FLAGS_WITH_PREFIX([xalan],[[CXXFLAGS]])
-
-  fi
-
-  if test -z "$xalan_found" ; then
-
-    AC_MSG_NOTICE([looking for Xalan in system includes])
-    unset ac_cv_header_xalanc_Include_XalanVersion_hpp
-    AC_CHECK_HEADER([xalanc/Include/XalanVersion.hpp],
-                    [xalan_found=yes
-		     xalan_CXXFLAGS=""
-		     xalan_LIBS="-lxalan-c"],
-		    [AC_MSG_NOTICE([WARNING - configuring without Xalan])])
-
-  fi
-fi
-
-if test "${xalan_found}" = "yes" ; then
-AX_SAVE_FLAGS_WITH_PREFIX([xalan],[[CXXFLAGS],[LIBS]])
-
-AC_MSG_CHECKING([Xalan version])
-AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM([#include <xalanc/Include/XalanVersion.hpp>],
-[#if  _XALAN_VERSION >= 11100
-int i = 0;
-#else
-#error requires Xalan version 1.11+
-#endif])],
-    [AC_MSG_RESULT(OK)],
-    [AC_MSG_FAILURE([Xalan-C 1.11+ is required])])
-
-  # Do we need xalanMsg.so?
-  AC_SEARCH_LIBS([XalanInitialize],[xalanMsg],[xalan_LIBS="$LIBS"])
-  
-  AC_DEFINE([XSEC_HAVE_XALAN],[1],[Define to 1 if Xalan is available.])
-  AC_SUBST([xalan_CXXFLAGS])
-  AC_SUBST([xalan_LIBS])
-
-AX_RESTORE_FLAGS_WITH_PREFIX([xalan],[[CXXFLAGS],[LIBS]])
-else
-  AC_MSG_NOTICE([Xalan not included in build - XPath and XSLT will not be available])
-fi
-
 AC_LANG(C)
 
 # Crypto provider options (OpenSSL / NSS)
@@ -239,30 +168,8 @@ AS_IF([test x"$with_openssl" != xno],
         ],[AS_IF([test "x$with_openssl" != xcheck],[AC_MSG_ERROR([Unable to find OpenSSL])])])       
     ])
 
-AC_ARG_WITH([nss],
-    [AS_HELP_STRING([--with-nss],[use the NSS crypto provider @<:@default=check@:>@])],,
-    [with_nss=check])
-
-AS_IF([test x"$with_nss" != xno],
-    [AX_PKG_CHECK_MODULES([nss],,[nss],
-        [with_nss=found
-         AC_DEFINE([XSEC_HAVE_NSS],[1],[Define if NSS is in use])
-         AC_MSG_WARN([NSS is no longer officially supported])
-        ],[AS_IF([test "x$with_nss" != "xcheck"],[AC_MSG_ERROR([Unable to find NSS])])])
-    ])
-
-AC_ARG_ENABLE(xkms,
-    AS_HELP_STRING([--disable-xkms],[disable XKMS support]),
-    [have_xkms=${enableval}],
-    [have_xkms=yes])
-if test x"$have_xkms" = "xyes" ; then
-    AC_DEFINE([XSEC_XKMS_ENABLED],[1],[Define to 1 if XKMS support is included.])
-fi
-
 # Populate the Makefile conditionals
 AM_CONDITIONAL([XSEC_AM_HAVE_OPENSSL],[test "x$with_openssl" = xfound])
-AM_CONDITIONAL([XSEC_AM_HAVE_NSS],[test "x$with_nss" = xfound])
-AM_CONDITIONAL(XSEC_AM_HAVE_XKMS, test x"$have_xkms" = "xyes")
 
 # output the Makefiles
 AC_OUTPUT

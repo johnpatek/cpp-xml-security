@@ -45,37 +45,6 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-#ifdef XSEC_HAVE_XALAN
-
-// Xalan includes
-#include <xalanc/XalanDOM/XalanDocument.hpp>
-#include <xalanc/XercesParserLiaison/XercesDocumentWrapper.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XPath/XPathEvaluator.hpp>
-#include <xalanc/XPath/NodeRefList.hpp>
-
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-
-// Namespace definitions
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XercesDOMSupport)
-XALAN_USING_XALAN(XercesParserLiaison)
-XALAN_USING_XALAN(XalanDocument)
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XalanElement)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanDOMChar)
-XALAN_USING_XALAN(NodeRefList)
-XALAN_USING_XALAN(XercesDocumentWrapper)
-XALAN_USING_XALAN(XercesWrapperNavigator)
-XALAN_USING_XALAN(c_wstr)
-
-#endif
-
 // General includes
 #include <stdlib.h>
 #include <string.h>
@@ -451,87 +420,8 @@ bool XSECC14n20010315::getCommentsProcessing(void) {
 
 int XSECC14n20010315::XPathSelectNodes(const char * XPathExpr) {
 
-#ifndef XSEC_HAVE_XPATH
-
 	throw XSECException(XSECException::UnsupportedFunction,
 		"This library has been compiled without XPath support");
-
-#else
-
-	XPathEvaluator::initialize();
-
-	// We use Xalan to process the Xerces DOM tree and get the XPath nodes
-
-	XercesParserLiaison theParserLiaison;
-	XercesDOMSupport theDOMSupport(theParserLiaison);
-
-	if (mp_doc == 0) {
-		throw XSECException(XSECException::UnsupportedFunction,
-			"XPath selection only supported in C14n for full documents");
-	}
-
-	DOMElement* theXercesNode = mp_doc->createElement(c_wstr(XalanDOMString("ns")));
-	theXercesNode->setAttribute(c_wstr(XalanDOMString("xmlns:ietf")), c_wstr(XalanDOMString("http://www.ietf.org")));
-
-	XalanDocument* theDoc = theParserLiaison.createDocument(mp_doc);
-
-	// Set up the XPath evaluator
-
-	XPathEvaluator	theEvaluator;
-
-	// OK, let's find the context node...
-
-	XalanDOMString cd = XalanDOMString("/");	// For the moment assume the root is the context
-
-	const XalanDOMChar * cexpr = cd.c_str();
-
-	XalanNode* const	theContextNode =
-		theEvaluator.selectSingleNode(
-		theDOMSupport,
-		theDoc,
-		cexpr,
-		theDoc->getDocumentElement());
-
-	if (theContextNode == 0)
-	{
-
-		// No appropriate nodes.
-		return 0;
-
-	}
-	// OK, let's evaluate the expression...
-
-	XalanDOMString ed = XalanDOMString(XPathExpr);
-	const XalanDOMChar * expr = ed.c_str();
-
-	NodeRefList output;
-
-	NodeRefList theResult(
-		theEvaluator.selectNodeList(
-		output,
-		theDOMSupport,
-		theContextNode,
-		expr,
-		theDoc->getElementById(XalanDOMString("ns"))));
-
-
-	XercesDocumentWrapper *theWrapper = theParserLiaison.mapDocumentToWrapper(theDoc);
-	XercesWrapperNavigator theWrapperNavigator(theWrapper);
-
-	int size = (int) theResult.getLength();
-	const DOMNode *item;
-
-	for (int i = 0; i < size; ++ i) {
-
-		item = theWrapperNavigator.mapNode(theResult.item(i));
-		m_XPathMap.addNode(item);
-		//tmp->element = theBridgeNavigator.mapNode(theResult.item(i));
-	}
-
-	m_XPathSelection = true;
-	return size;
-
-#endif
 
 }
 

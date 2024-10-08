@@ -28,7 +28,6 @@
 
 #include <xsec/dsig/DSIGSignature.hpp>
 #include <xsec/dsig/DSIGTransformXPath.hpp>
-#include <xsec/transformers/TXFMXPath.hpp>
 #include <xsec/framework/XSECEnv.hpp>
 #include <xsec/framework/XSECError.hpp>
 #include <xsec/framework/XSECException.hpp>
@@ -72,26 +71,8 @@ DSIGTransformXPath::~DSIGTransformXPath() {};
 
 void DSIGTransformXPath::appendTransformer(TXFMChain * input) {
 
-#ifndef XSEC_HAVE_XPATH
-
 	throw XSECException(XSECException::UnsupportedFunction,
 		"XPath transforms are not supported in this compilation of the XSEC library");
-
-#else
-
-	TXFMXPath *x;
-	// XPath transform
-	XSECnew(x, TXFMXPath(mp_txfmNode->getOwnerDocument()));
-	input->appendTxfm(x);
-
-	// These can throw, but the TXFMXPath is now owned by the chain, so will
-	// be cleaned up down the calling stack.
-
-	x->setNameSpace(mp_NSMap);
-	x->evaluateExpr(mp_txfmNode, m_expr);
-	
-#endif /* XSEC_HAVE_XPATH */
-
 }
 
 DOMElement * DSIGTransformXPath::createBlankTransform(DOMDocument * parentDoc) {

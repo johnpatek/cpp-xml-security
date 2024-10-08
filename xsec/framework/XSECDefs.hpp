@@ -123,28 +123,6 @@
 
 // Configuration includes
 
-// We want to use XPath calculated transforms
-
-//#define XSEC_USE_XPATH_ENVELOPE
-
-
-// Given the configuration - what should we set?
-
-#ifdef XSEC_HAVE_XALAN
-
-#	define XSEC_HAVE_XPATH
-#	define XSEC_HAVE_XSLT
-
-#endif
-
-#ifndef XSEC_HAVE_XPATH
-
-#	ifdef XSEC_USE_XPATH_ENVELOPE
-#		undef XSEC_USE_XPATH_ENVELOPE
-#	endif
-
-#endif
-
 #if defined(XSEC_BUILDING_LIBRARY) || defined(XSEC_BUILDING_TOOLS)
 #   ifdef HAVE_STRCASECMP
 #       define _stricmp(x,y) strcasecmp(x,y)

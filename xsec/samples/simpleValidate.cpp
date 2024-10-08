@@ -50,15 +50,6 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-#ifdef XSEC_HAVE_XALAN
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-XALAN_USING_XALAN(XalanTransformer)
-#endif
-
 char docToValidate [4096] = "\
 <PurchaseOrder>\n\
 <Company>Widgets.Org</Company>\n\
@@ -115,9 +106,6 @@ int main (int argc, char **argv) {
 
 	try {
 		XMLPlatformUtils::Initialize();
-#ifdef XSEC_HAVE_XALAN
-		XalanTransformer::initialize();
-#endif
 		XSECPlatformUtils::Initialise();
 	}
 	catch (const XMLException &e) {

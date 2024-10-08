@@ -32,31 +32,10 @@
 
 
 /*
- * The following defines whether Xalan integration is required.
- *
- * Xalan is used for XSLT and complex XPath processing.
- * Activate this #define if Xalan is not required (or desired)
- */
-
-// #define XSEC_HAVE_XALAN 1
-
-
-/*
  * Define presence of cryptographic providers.
- *
- * WARNING: Neither WinCAPI nor NSS are officially supported by the sole remanining
- * maintainer of this library. Use at your own risk, or contact the project if you're
- * interested in assisting with maintenance and support of that code.
  */
 
 // #define XSEC_HAVE_OPENSSL 1
-// #define XSEC_HAVE_WINCAPI 1
-// #define XSEC_HAVE_NSS 1
-
-/*
- * Define if XKMS support is enabled.
- */
-// #define XSEC_XKMS_ENABLED 1
 
 /*
  * Some settings for OpenSSL if we have it

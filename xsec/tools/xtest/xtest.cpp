@@ -55,24 +55,6 @@
 #include <xsec/dsig/DSIGTransformXPathFilter.hpp>
 #include <xsec/dsig/DSIGTransformC14n.hpp>
 #include <xsec/dsig/DSIGObject.hpp>
-
-// XALAN
-
-#ifdef XSEC_HAVE_XALAN
-
-#include <xalanc/XPath/XPathEvaluator.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XalanTransformer)
-
-#endif
-
 // XSEC
 
 #include <xsec/canon/XSECC14n20010315.hpp>
@@ -105,16 +87,6 @@ XALAN_USING_XALAN(XalanTransformer)
 #	include <openssl/evp.h>
 #	include <openssl/pem.h>
 #endif
-#if defined (XSEC_HAVE_WINCAPI)
-#	include <xsec/enc/WinCAPI/WinCAPICryptoKeyHMAC.hpp>
-#	include <xsec/enc/WinCAPI/WinCAPICryptoKeyRSA.hpp>
-#	include <xsec/enc/WinCAPI/WinCAPICryptoProvider.hpp>
-#endif
-#if defined (XSEC_HAVE_NSS)
-#	include <xsec/enc/NSS/NSSCryptoKeyHMAC.hpp>
-#	include <xsec/enc/NSS/NSSCryptoKeyRSA.hpp>
-#	include <xsec/enc/NSS/NSSCryptoProvider.hpp>
-#endif
 
 using std::ostream;
 using std::cout;
@@ -135,8 +107,6 @@ XERCES_CPP_NAMESPACE_USE
 // --------------------------------------------------------------------------------
 
 bool g_printDocs = false;
-bool g_useWinCAPI = false;
-bool g_useNSS = false;
 bool g_haveAES = true;
 bool g_testGCM = true;
 
@@ -363,25 +333,11 @@ XSECCryptoKeyHMAC * createHMACKey(const unsigned char * str) {
 	// Create the HMAC key
 	XSECCryptoKeyHMAC * hmacKey = NULL;
 
-#if defined(XSEC_HAVE_WINCAPI)
-
-	if (g_useWinCAPI == true) {
-		hmacKey = new WinCAPICryptoKeyHMAC(0);
-	}
-#endif
-
-# if defined (XSEC_HAVE_NSS)
-	if (g_useNSS == true) {
-		hmacKey = new NSSCryptoKeyHMAC();
-	}
-#endif
-
 #if defined (XSEC_HAVE_OPENSSL)
 	if (hmacKey == NULL)
 		hmacKey = new OpenSSLCryptoKeyHMAC();
-#endif
-
 	hmacKey->setKey((unsigned char *) str, (unsigned int) strlen((char *)str));
+#endif
 
 	return hmacKey;
 
@@ -1068,65 +1024,15 @@ void unitTestRSA(DOMImplementation * impl) {
 	XSECCryptoKeyRSA * rsaKey;
 
 #if defined (XSEC_HAVE_OPENSSL)
-	if (!g_useWinCAPI && !g_useNSS) {
-		// Load the key
-		BIO * bioMem = BIO_new(BIO_s_mem());
-		BIO_puts(bioMem, s_tstRSAPrivateKey);
-		EVP_PKEY * pk = PEM_read_bio_PrivateKey(bioMem, NULL, NULL, NULL);
+	// Load the key
+	BIO * bioMem = BIO_new(BIO_s_mem());
+	BIO_puts(bioMem, s_tstRSAPrivateKey);
+	EVP_PKEY * pk = PEM_read_bio_PrivateKey(bioMem, NULL, NULL, NULL);
 
-		rsaKey = new OpenSSLCryptoKeyRSA(pk);
+	rsaKey = new OpenSSLCryptoKeyRSA(pk);
 
-		BIO_free(bioMem);
-		EVP_PKEY_free(pk);
-	}
-#endif
-
-#if defined (XSEC_HAVE_WINCAPI)
-	if (g_useWinCAPI) {
-
-		// Use the internal key
-		WinCAPICryptoProvider *cp = (WinCAPICryptoProvider *) (XSECPlatformUtils::g_cryptoProvider);
-		HCRYPTPROV p = cp->getApacheKeyStore();
-			
-		rsaKey = new WinCAPICryptoKeyRSA(p, AT_KEYEXCHANGE, true);
-	}
-
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-	if (g_useNSS) {
-		// Heavily based on Mozilla example code
-		SECKEYPrivateKey *prvKey = 0;
-		SECKEYPublicKey *pubKey = 0;
-		PK11SlotInfo *slot = 0;
-		PK11RSAGenParams rsaParams;
-
-		// Use a bog standard key size
-		rsaParams.keySizeInBits = 1024;
-		rsaParams.pe = 65537;
-		
-		// We need somewhere to temporarily store a generated key
-		slot = PK11_GetInternalKeySlot();
-		if (!slot) { 
-			cerr << "Error generating key - can't get NSS slot\n";
-			exit (1);
-		}
-		
-		// Do the generate
-		prvKey = PK11_GenerateKeyPair(slot, CKM_RSA_PKCS_KEY_PAIR_GEN, &rsaParams,
-			&pubKey, PR_FALSE, PR_TRUE, 0);
-		
-		if (!prvKey) {
-			if (slot)
-				PK11_FreeSlot(slot);
-			cerr << "Error generating key within NSS\n";
-			exit (1);
-		}
-		
-		// Now use the key!
-		rsaKey = new NSSCryptoKeyRSA(pubKey, prvKey);
-
-	}
+	BIO_free(bioMem);
+	EVP_PKEY_free(pk);
 #endif
 
 	cerr << "Unit testing RSA-SHA1 signature ... ";
@@ -1202,11 +1108,7 @@ void unitTestSignature(DOMImplementation * impl) {
 
 	// Test an enveloping signature
 	unitTestEnvelopingSignature(impl);
-#ifdef XSEC_HAVE_XALAN
-	unitTestBase64NodeSignature(impl);
-#else
 	cerr << "Skipping base64 node test (Requires XPath)" << endl;
-#endif
 
 	// Test "long" sha hashes
 	if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA512))
@@ -1305,36 +1207,8 @@ void testSignature(DOMImplementation *impl) {
 			DSIGConstants::s_unicodeStrURIEXC_C14N_COM);
 		ce->addInclusiveNamespace("foo");
 
-#ifndef XSEC_HAVE_XALAN
-
 		cerr << "WARNING : No testing of XPath being performed as Xalan not present" << endl;
 		refCount = 7;
-
-#else
-		/*
-		 * Create some XPath/XPathFilter references
-		 */
-
-
-		ref[7] = sig->createReference(MAKE_UNICODE_STRING(""),
-			DSIGConstants::s_unicodeStrURISHA1);
-		sig->setXPFNSPrefix(MAKE_UNICODE_STRING("xpf"));
-		DSIGTransformXPathFilter * xpf = ref[7]->appendXPathFilterTransform();
-		xpf->appendFilter(DSIGXPathFilterExpr::FILTER_INTERSECT, MAKE_UNICODE_STRING("//ADoc/category"));
-
-		ref[8] = sig->createReference(MAKE_UNICODE_STRING(""),
-			DSIGConstants::s_unicodeStrURISHA1);
-		/*		ref[5]->appendXPathTransform("ancestor-or-self::dsig:Signature", 
-				"xmlns:dsig=http://www.w3.org/2000/09/xmldsig#"); */
-
-		DSIGTransformXPath * x = ref[8]->appendXPathTransform("count(ancestor-or-self::dsig:Signature | \
-here()/ancestor::dsig:Signature[1]) > \
-count(ancestor-or-self::dsig:Signature)");
-		x->setNamespace("dsig", "http://www.w3.org/2000/09/xmldsig#");
-
-		refCount = 9;
-
-#endif
 	
 		/*
 		 * Sign the document, using an HMAC algorithm and the key "secret"
@@ -2044,120 +1918,54 @@ void unitTestEncrypt(DOMImplementation *impl) {
 		cerr << "RSA key wrap... ";
 
 #if defined (XSEC_HAVE_OPENSSL)
-		if (!g_useWinCAPI && !g_useNSS) {
-			// Load the key
-			BIO * bioMem = BIO_new(BIO_s_mem());
-			BIO_puts(bioMem, s_tstRSAPrivateKey);
-			EVP_PKEY * pk = PEM_read_bio_PrivateKey(bioMem, NULL, NULL, NULL);
+		// Load the key
+		BIO * bioMem = BIO_new(BIO_s_mem());
+		BIO_puts(bioMem, s_tstRSAPrivateKey);
+		EVP_PKEY * pk = PEM_read_bio_PrivateKey(bioMem, NULL, NULL, NULL);
 
-			OpenSSLCryptoKeyRSA * k = new OpenSSLCryptoKeyRSA(pk);
+		OpenSSLCryptoKeyRSA * k = new OpenSSLCryptoKeyRSA(pk);
 
-			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_1_5);
+		unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_1_5);
 
-			cerr << "RSA OAEP key wrap... ";
+		cerr << "RSA OAEP key wrap... ";
+		k = new OpenSSLCryptoKeyRSA(pk);
+		unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP_MGFP1, DSIGConstants::s_unicodeStrURIMGF1_SHA1);
+
+		cerr << "RSA OAEP key wrap + params... ";
+		k = new OpenSSLCryptoKeyRSA(pk);
+		unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP_MGFP1, DSIGConstants::s_unicodeStrURIMGF1_SHA1,
+				s_tstOAEPparams, (unsigned int) strlen((char *) s_tstOAEPparams));
+
+		cerr << "RSA OAEP 1.1 key wrap... ";
+		k = new OpenSSLCryptoKeyRSA(pk);
+		unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA1);
+
+		if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA224)) {
+			cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA224... ";
 			k = new OpenSSLCryptoKeyRSA(pk);
-			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP_MGFP1, DSIGConstants::s_unicodeStrURIMGF1_SHA1);
+			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA224);
+		}
 
-			cerr << "RSA OAEP key wrap + params... ";
+		if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA256)) {
+			cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA256... ";
 			k = new OpenSSLCryptoKeyRSA(pk);
-			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP_MGFP1, DSIGConstants::s_unicodeStrURIMGF1_SHA1,
-			        s_tstOAEPparams, (unsigned int) strlen((char *) s_tstOAEPparams));
-
-            cerr << "RSA OAEP 1.1 key wrap... ";
-            k = new OpenSSLCryptoKeyRSA(pk);
-            unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA1);
-
-            if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA224)) {
-                cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA224... ";
-                k = new OpenSSLCryptoKeyRSA(pk);
-                unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA224);
-            }
-
-            if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA256)) {
-                cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA256... ";
-                k = new OpenSSLCryptoKeyRSA(pk);
-                unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA256);
-            }
-
-            if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA384)) {
-                cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA384... ";
-                k = new OpenSSLCryptoKeyRSA(pk);
-                unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA384);
-            }
-
-            if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA512)) {
-                cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA512... ";
-                k = new OpenSSLCryptoKeyRSA(pk);
-                unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA512);
-            }
-
-            BIO_free(bioMem);
-			EVP_PKEY_free(pk);
+			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA256);
 		}
-#endif
 
-#if defined (XSEC_HAVE_WINCAPI)
-		if (g_useWinCAPI) {
-
-			// Use the internal key
-			WinCAPICryptoProvider *cp = (WinCAPICryptoProvider *) (XSECPlatformUtils::g_cryptoProvider);
-			HCRYPTPROV p = cp->getApacheKeyStore();
-			
-			WinCAPICryptoKeyRSA * rsaKey = new WinCAPICryptoKeyRSA(p, AT_KEYEXCHANGE, true);
-			unitTestKeyEncrypt(impl, rsaKey, DSIGConstants::s_unicodeStrURIRSA_1_5);
-
-			cerr << "RSA OAEP key wrap... ";
-			rsaKey = new WinCAPICryptoKeyRSA(p, AT_KEYEXCHANGE, true);
-			unitTestKeyEncrypt(impl, rsaKey, DSIGConstants::s_unicodeStrURIRSA_OAEP_MGFP1);
-
-            cerr << "RSA OAEP 1.1 key wrap... ";
-            rsaKey = new WinCAPICryptoKeyRSA(p, AT_KEYEXCHANGE, true);
-            unitTestKeyEncrypt(impl, rsaKey, DSIGConstants::s_unicodeStrURIRSA_OAEP);
-        }
-
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-		if (g_useNSS) {
-			// Heavily based on Mozilla example code
-			SECKEYPrivateKey *prvKey = 0;
-			SECKEYPublicKey *pubKey = 0;
-			PK11SlotInfo *slot = 0;
-			PK11RSAGenParams rsaParams;
-
-			// Use a bog standard key size
-			rsaParams.keySizeInBits = 1024;
-			rsaParams.pe = 65537;
-  
-			// We need somewhere to temporarily store a generated key
-		    slot = PK11_GetInternalKeySlot();
-			if (!slot) { 
-				cerr << "Error generating key - can't get NSS slot\n";
-				exit (1);
-			}
-
-			// Do the generate
-			prvKey = PK11_GenerateKeyPair(slot, CKM_RSA_PKCS_KEY_PAIR_GEN, &rsaParams,
-               &pubKey, PR_FALSE, PR_TRUE, 0);
-
-			if (!prvKey) {
-				if (slot)
-					PK11_FreeSlot(slot);
-				cerr << "Error generating key within NSS\n";
-				exit (1);
-			}
-
-			// Now use the key!
-			NSSCryptoKeyRSA * rsaKey = new NSSCryptoKeyRSA(pubKey, prvKey);
-			unitTestKeyEncrypt(impl, rsaKey, DSIGConstants::s_unicodeStrURIRSA_1_5);
-
-			if (slot) 
-				// Actual keys will be deleted by the provider
-				PK11_FreeSlot(slot);
-			
-			cerr << "RSA OAEP key wrap skipped - not yet supported in NSS crypto provider\n";
-			
+		if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA384)) {
+			cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA384... ";
+			k = new OpenSSLCryptoKeyRSA(pk);
+			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA384);
 		}
+
+		if (XSECPlatformUtils::g_cryptoProvider->algorithmSupported(XSECCryptoHash::HASH_SHA512)) {
+			cerr << "RSA OAEP 1.1 key wrap with MGF1+SHA512... ";
+			k = new OpenSSLCryptoKeyRSA(pk);
+			unitTestKeyEncrypt(impl, k, DSIGConstants::s_unicodeStrURIRSA_OAEP, DSIGConstants::s_unicodeStrURIMGF1_SHA512);
+		}
+
+		BIO_free(bioMem);
+		EVP_PKEY_free(pk);
 #endif
 
 		XSECCryptoSymmetricKey * ks;
@@ -2263,17 +2071,9 @@ void unitTestEncrypt(DOMImplementation *impl) {
 		cerr << "Unit testing 3DES CBC encryption" << endl;
 		unitTestElementContentEncrypt(impl, ks->clone(), DSIGConstants::s_unicodeStrURI3DES_CBC, false);
 		unitTestElementContentEncrypt(impl, ks, DSIGConstants::s_unicodeStrURI3DES_CBC, true);
-#ifdef XSEC_HAVE_XALAN
-		if (g_haveAES) {
-			cerr << "Unit testing CipherReference creation and decryption" << endl;
-			unitTestCipherReference(impl);
-		}
-		else {
-			cerr << "Skipped Cipher Reference Test (uses AES)" << endl;
-		}
-#else
+
 		cerr << "Skipped Cipher Reference Test (requires XPath)" << endl;
-#endif
+
 		cerr << "Misc. encryption tests" << endl;
 		unitTestSmallElement(impl);
 	}
@@ -2557,14 +2357,6 @@ void printUsage(void) {
 	cerr << "     Where options are :\n\n";
 	cerr << "     --help/-h\n";
 	cerr << "         This help message\n\n";
-#if defined (XSEC_HAVE_WINCAPI)  && defined (XSEC_HAVE_OPENSSL)
-	cerr << "     --wincapi/-w\n";
-	cerr << "         Use Windows Crypto API for crypto functionality\n\n";
-#endif
-#if defined (XSEC_HAVE_NSS)
-	cerr << "     --nss/-n\n";
-	cerr << "         Use NSS Crypto API for crypto functionality\n\n";
-#endif
 	cerr << "     --print-docs/-p\n";
 	cerr << "         Print the test documents\n\n";
 	cerr << "     --signature-only/-s\n";
@@ -2598,13 +2390,6 @@ int main(int argc, char **argv) {
 	bool		doSignatureTest = true;
 	bool		doSignatureUnitTests = true;
 
-	// Testing for which Crypto API to use by default - only really useful on windows
-#if !defined(XSEC_HAVE_OPENSSL)
-#if defined(XSEC_HAVE_WINCAPI)
-	g_useWinCAPI = true;
-#endif
-#endif
-
 	int paramCount = 1;
 
 	while (paramCount < argc) {
@@ -2617,18 +2402,6 @@ int main(int argc, char **argv) {
 			g_printDocs = true;
 			paramCount++;
 		}
-#if defined(XSEC_HAVE_WINCAPI) && defined(XSEC_HAVE_OPENSSL)
-		else if (_stricmp(argv[paramCount], "--wincapi") == 0 || _stricmp(argv[paramCount], "-w") == 0) {
-			g_useWinCAPI = true;
-			paramCount++;
-		}
-#endif
-#if defined(XSEC_HAVE_NSS)
-		else if (_stricmp(argv[paramCount], "--nss") == 0 || _stricmp(argv[paramCount], "-n") == 0) {
-			g_useNSS = true;
-			paramCount++;
-		}
-#endif
 
 		else if (_stricmp(argv[paramCount], "--signature-only") == 0 || _stricmp(argv[paramCount], "-s") == 0) {
 			doEncryptionTest = false;
@@ -2688,41 +2461,13 @@ int main(int argc, char **argv) {
 	// First initialise the XML system
 
 	try {
-
 		XMLPlatformUtils::Initialize();
-#ifdef XSEC_HAVE_XALAN
-		XPathEvaluator::initialize();
-		XalanTransformer::initialize();
-#endif
 		XSECPlatformUtils::Initialise();
-
-#if defined (XSEC_HAVE_OPENSSL) && defined (XSEC_HAVE_WINCAPI)
-		if (g_useWinCAPI) {
-			// Setup for Windows Crypt API
-			WinCAPICryptoProvider * cp;
-			// First set windows as the crypto provider
-			cp = new WinCAPICryptoProvider();
-			XSECPlatformUtils::SetCryptoProvider(cp);
-		}
-#endif
-#if defined (XSEC_HAVE_NSS)
-		if (g_useNSS) {
-			// Setup for NSS Crypt API
-			NSSCryptoProvider * cp;
-			// First set windows as the crypto provider
-			cp = new NSSCryptoProvider();
-			XSECPlatformUtils::SetCryptoProvider(cp);
-		}
-#endif
-
-
 	}
 	catch (const XMLException &e) {
-
 		cerr << "Error during initialisation of Xerces" << endl;
 		cerr << "Error Message = : "
 		     << e.getMessage() << endl;
-
 	}
 
 	{
@@ -2786,10 +2531,6 @@ int main(int argc, char **argv) {
 	}
 
 	XSECPlatformUtils::Terminate();
-#ifdef XSEC_HAVE_XALAN
-	XalanTransformer::terminate();
-	XPathEvaluator::terminate();
-#endif
 	XMLPlatformUtils::Terminate();
 
 #if defined (_DEBUG) && defined (_MSC_VER) && defined (_XSEC_DO_MEMDEBUG)

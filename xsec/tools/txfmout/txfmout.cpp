@@ -77,23 +77,6 @@ using std::cerr;
 using std::endl;
 using std::ofstream;
 
-#ifdef XSEC_HAVE_XALAN
-
-// XALAN
-
-#include <xalanc/XPath/XPathEvaluator.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XalanTransformer)
-
-#else
-
 std::ostream& operator<< (std::ostream& target, const XMLCh * s)
 {
     char *p = XMLString::transcode(s);
@@ -101,8 +84,6 @@ std::ostream& operator<< (std::ostream& target, const XMLCh * s)
     XSEC_RELEASE_XMLCH(p);
     return target;
 }
-
-#endif
 
 // ---------------------------------------------------------------------------
 //  Outputter
@@ -408,10 +389,6 @@ int main(int argc, char **argv) {
 	try {
 
 		XMLPlatformUtils::Initialize();
-#ifdef XSEC_HAVE_XALAN
-		XPathEvaluator::initialize();
-		XalanTransformer::initialize();
-#endif
 		XSECPlatformUtils::Initialise();
 
 	}

@@ -167,17 +167,6 @@ public:
 
 	void setXENC11NSPrefix(const XMLCh * prefix);
 
-#ifdef XSEC_XKMS_ENABLED
-	/**
-	 * \brief Set prefix for XKMS nodes
-	 *
-	 * Set the namespace prefix the library will use when creating
-	 * nodes in the XKMS namespace
-	 */
-
-	void setXKMSNSPrefix(const XMLCh * prefix);
-#endif
-
 	/**
 	 * \brief Get the NS Prefix being used for DSIG elements.
 	 *
@@ -236,20 +225,6 @@ public:
 	 */
 
 	const XMLCh * getXENC11NSPrefix() const {return mp_xenc11PrefixNS;}
-
-#ifdef XSEC_XKMS_ENABLED
-	/**
-	 * \brief Get namespace prefix for XKMS nodes
-	 *
-	 * Find the string being used by the library to prefix nodes in the 
-	 * xkms: namespace.
-	 *
-	 * @returns XKMS namespace prefix
-	 */
-
-	const XMLCh * getXKMSNSPrefix(void) const {return mp_xkmsPrefixNS;}
-#endif
-	
 	//@}
 
 	/** @name Pretty Printing Functions */
@@ -552,9 +527,7 @@ private:
 	XMLCh						* mp_xpfPrefixNS;
 	XMLCh						* mp_xencPrefixNS;
 	XMLCh						* mp_xenc11PrefixNS;
-#ifdef XSEC_XKMS_ENABLED
-	XMLCh						* mp_xkmsPrefixNS;
-#endif
+
 	// Resolvers
 	XSECURIResolver				* mp_URIResolver;
 

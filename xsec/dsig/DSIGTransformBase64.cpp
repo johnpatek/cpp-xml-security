@@ -36,7 +36,6 @@
 #include <xsec/transformers/TXFMBase64.hpp>
 #include <xsec/transformers/TXFMC14n.hpp>
 #include <xsec/transformers/TXFMChain.hpp>
-#include <xsec/transformers/TXFMXPath.hpp>
 
 #include "../utils/XSECDOMUtils.hpp"
 
@@ -69,33 +68,10 @@ void DSIGTransformBase64::appendTransformer(TXFMChain * input) {
 
 		if (input->getLastTxfm()->getNodeType() != TXFMBase::DOM_NODE_XPATH_NODESET) {
 
-#ifndef XSEC_HAVE_XPATH
-
 			throw XSECException(XSECException::UnsupportedFunction,
 				"Unable to extract Base64 text from Nodes without XPath support");
 
 		}
-
-#else
-		
-			// Use an XPath transform to get "Self::text()" from the nodeset
-		
-			TXFMXPath *x;
-		
-			XSECnew(x, TXFMXPath(mp_txfmNode->getOwnerDocument()));
-			input->appendTxfm(x);
-			((TXFMXPath *) x)->evaluateExpr(mp_txfmNode, "self::text()");
-
-		}
-		
-		TXFMC14n *c;
-		
-		// Now use c14n to translate to BYTES
-		
-		XSECnew(c, TXFMC14n(mp_txfmNode->getOwnerDocument()));
-		input->appendTxfm(c);
-#endif
-
 	}
 
 	// Now the actual Base64

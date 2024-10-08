@@ -36,9 +36,7 @@
 #include <xsec/transformers/TXFMHash.hpp>
 #include <xsec/transformers/TXFMBase64.hpp>
 #include <xsec/transformers/TXFMSB.hpp>
-#include <xsec/transformers/TXFMXPath.hpp>
 #include <xsec/transformers/TXFMC14n.hpp>
-#include <xsec/transformers/TXFMXSL.hpp>
 #include <xsec/transformers/TXFMEnvelope.hpp>
 #include <xsec/dsig/DSIGConstants.hpp>
 #include <xsec/dsig/DSIGSignature.hpp>

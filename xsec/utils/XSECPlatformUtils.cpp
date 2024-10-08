@@ -34,7 +34,6 @@
 #include <xsec/framework/XSECError.hpp>
 #include <xsec/dsig/DSIGConstants.hpp>
 #include <xsec/dsig/DSIGSignature.hpp>
-#include <xsec/xkms/XKMSConstants.hpp>
 #include <xsec/framework/XSECAlgorithmMapper.hpp>
 #include <xsec/transformers/TXFMOutputFile.hpp>
 
@@ -44,14 +43,6 @@ XERCES_CPP_NAMESPACE_USE
 
 #if defined (XSEC_HAVE_OPENSSL)
 #	include <xsec/enc/OpenSSL/OpenSSLCryptoProvider.hpp>
-#endif
-
-#if defined (XSEC_HAVE_WINCAPI)
-#	include <xsec/enc/WinCAPI/WinCAPICryptoProvider.hpp>
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-#	include <xsec/enc/NSS/NSSCryptoProvider.hpp>
 #endif
 
 // Static data used by all of XSEC
@@ -69,14 +60,6 @@ XSECPlatformUtils::TransformFactory* XSECPlatformUtils::g_loggingSink = NULL;
 
 #if defined (XSEC_HAVE_OPENSSL)
 #	define XSEC_DEFAULT_PROVIDER	OpenSSLCryptoProvider()
-#else
-#	if defined (XSEC_HAVE_WINCAPI)
-#		define XSEC_DEFAULT_PROVIDER	WinCAPICryptoProvider()
-#	else 
-#		if defined (XSEC_HAVE_NSS)
-#			define XSEC_DEFAULT_PROVIDER	NSSCryptoProvider()
-#		endif
-#	endif
 #endif
 
 TXFMBase* TXFMOutputFileFactory(DOMDocument* doc) {
@@ -105,9 +88,6 @@ void XSECPlatformUtils::Initialise(XSECCryptoProvider * p) {
 
 	// Set up necessary constants
 	DSIGConstants::create();
-#ifdef XSEC_XKMS_ENABLED
-	XKMSConstants::create();
-#endif
 
 	// Initialise the safeBuffer system
 	safeBuffer::init();
@@ -155,14 +135,9 @@ void XSECPlatformUtils::Terminate(void) {
 	// Clean out the algorithm mapper
 	delete internalMapper;
 
-	if (g_cryptoProvider != NULL)
-		delete g_cryptoProvider;
+	delete g_cryptoProvider;
 
 	DSIGConstants::destroy();
-#ifdef XSEC_XKMS_ENABLED
-	XKMSConstants::destroy();
-#endif
-
 }
 
 void XSECPlatformUtils::registerAlgorithmHandler(

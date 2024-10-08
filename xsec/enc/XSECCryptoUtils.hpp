@@ -40,24 +40,6 @@
  * @ingroup crypto
  */
 
-#ifdef XSEC_XKMS_ENABLED
-// --------------------------------------------------------------------------------
-//           XKMS Limited-Use Shared Secret handling
-// --------------------------------------------------------------------------------
-
-#define XKMSAuthenticationValue                    0x01
-#define    XKMSRevocationCodeIdenfitierEncoding1    0x02
-#define    XKMSRevocationCodeIdenfitierEncoding2    0x03
-#define XKMSKeyEncryption                        0x04
-
-int XSEC_EXPORT CalculateXKMSAuthenticationKey(unsigned char * input, int inputLen, unsigned char * output, int maxOutputLen);
-int XSEC_EXPORT CalculateXKMSRevocationCodeIdentifierEncoding1(unsigned char * input, int inputLen, unsigned char * output, int maxOutputLen);
-/* Calculate encoding 2 - Input is original pass phrase */
-int XSEC_EXPORT CalculateXKMSRevocationCodeIdentifierEncoding2(unsigned char * input, int inputLen, unsigned char * output, int maxOutputLen);
-/* Calculate encoding 2 - Input is encoding 1 */
-int XSEC_EXPORT CalculateXKMSRevocationCodeIdentifierEncoding2From1(unsigned char * input, int inputLen, unsigned char * output, int maxOutputLen);
-int XSEC_EXPORT CalculateXKMSKEK(unsigned char * input, int inputLen, unsigned char * output, int maxOutputLen);
-#endif
 
 // --------------------------------------------------------------------------------
 //           Some Base64 helpers

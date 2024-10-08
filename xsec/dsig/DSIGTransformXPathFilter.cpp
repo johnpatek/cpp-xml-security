@@ -34,7 +34,6 @@
 #include <xsec/dsig/DSIGXPathFilterExpr.hpp>
 #include <xsec/framework/XSECEnv.hpp>
 #include <xsec/framework/XSECError.hpp>
-#include <xsec/transformers/TXFMXPathFilter.hpp>
 #include <xsec/transformers/TXFMChain.hpp>
 
 #include "../utils/XSECDOMUtils.hpp"
@@ -76,22 +75,8 @@ void DSIGTransformXPathFilter::appendTransformer(TXFMChain * input) {
             "DSIGTransformXPathFilter::appendTransform - load not yet called");
     }
 
-#ifndef XSEC_HAVE_XPATH
     throw XSECException(XSECException::UnsupportedFunction,
         "XPath transforms are not supported in this build of the XSEC library");
-#else
-    TXFMXPathFilter *xpf;
-    // XPath transform
-    XSECnew(xpf, TXFMXPathFilter(mp_txfmNode->getOwnerDocument()));
-    input->appendTxfm(xpf);
-
-    // These can throw, but the TXFMXPathFilter is now owned by the chain, so will
-    // be cleaned up down the calling stack.
-
-    xpf->evaluateExprs(&m_exprs);
-
-#endif /* NO_XPATH */
-
 }
 
 // --------------------------------------------------------------------------------

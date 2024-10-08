@@ -196,8 +196,7 @@ public :
     /**
      * \brief Return a HMAC key
      *
-     * Sometimes the library needs to create an HMAC key (notably within
-     * the XKMS utilities.
+     * Sometimes the library needs to create an HMAC key.
      *
      * This function allows the library to obtain a key that can then have
      * a value set within it.

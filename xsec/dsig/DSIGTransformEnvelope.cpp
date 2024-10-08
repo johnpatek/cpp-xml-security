@@ -36,7 +36,6 @@
 #include <xsec/transformers/TXFMEnvelope.hpp>
 #include <xsec/transformers/TXFMC14n.hpp>
 #include <xsec/transformers/TXFMChain.hpp>
-#include <xsec/transformers/TXFMXPath.hpp>
 
 #include "../utils/XSECDOMUtils.hpp"
 
@@ -63,18 +62,6 @@ DSIGTransformEnvelope::~DSIGTransformEnvelope() {};
 
 void DSIGTransformEnvelope::appendTransformer(TXFMChain * input) {
 
-#ifdef XSEC_USE_XPATH_ENVELOPE
-
-	TXFMXPath *x;
-	
-	// Special XPath transform
-	XSECnew(x, TXFMXPath(mp_txfmNode->getOwnerDocument()));
-	input->appendTxfm(x);
-	
-	// Execute the envelope expression
-	x->evaluateEnvelope(mp_txfmNode);
-#else
-
 	TXFMEnvelope *x;
 
 	// Use the Envelope transform
@@ -84,9 +71,6 @@ void DSIGTransformEnvelope::appendTransformer(TXFMChain * input) {
 
 	// Execute envelope
 	x->evaluateEnvelope(mp_txfmNode);
-
-#endif
-
 }
 
 DOMElement * DSIGTransformEnvelope::createBlankTransform(DOMDocument * parentDoc) {

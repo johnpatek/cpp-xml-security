@@ -76,23 +76,6 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-#ifdef XSEC_HAVE_XALAN
-
-// XALAN
-
-#include <xalanc/XPath/XPathEvaluator.hpp>
-#include <xalanc/XalanTransformer/XalanTransformer.hpp>
-
-// If this isn't defined, we're on Xalan 1.12+ and require modern C++
-#ifndef XALAN_USING_XALAN
-# define XALAN_USING_XALAN(NAME) using xalanc :: NAME;
-#endif
-
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XalanTransformer)
-
-#endif
-
 #if defined (XSEC_HAVE_OPENSSL)
 // OpenSSL
 
@@ -101,23 +84,7 @@ XALAN_USING_XALAN(XalanTransformer)
 
 #endif
 
-#if defined (XSEC_HAVE_WINCAPI)
-
-#	include <xsec/enc/WinCAPI/WinCAPICryptoProvider.hpp>
-#	include <xsec/enc/WinCAPI/WinCAPICryptoKeyHMAC.hpp>
-
-#endif
-
-#if defined (XSEC_HAVE_NSS)
-
-#	include <xsec/enc/NSS/NSSCryptoProvider.hpp>
-#	include <xsec/enc/NSS/NSSCryptoKeyHMAC.hpp>
-
-#endif
-
 #include <time.h>
-
-#ifndef XSEC_HAVE_XALAN
 
 std::ostream& operator<< (std::ostream& target, const XMLCh * s)
 {
@@ -126,8 +93,6 @@ std::ostream& operator<< (std::ostream& target, const XMLCh * s)
     XSEC_RELEASE_XMLCH(p);
     return target;
 }
-
-#endif
 
 // ----------------------------------------------------------------------------
 //           Checksig
@@ -152,15 +117,6 @@ void printUsage(void) {
 	cerr << "     --interop/-i\n";
 	cerr << "         Use the interop resolver for Baltimore interop examples\n\n";
 #endif
-#if defined(XSEC_HAVE_WINCAPI)
-#	if defined (XSEC_HAVE_OPENSSL)
-	cerr << "     --wincapi/-w\n";
-	cerr << "         Use the Windows CAPI crypto Provider\n\n";
-#	endif
-	cerr << "     --winhmackey/-wh <string>\n";
-	cerr << "         Use the Windows CAPI crypto provider and hash the <string>\n";
-	cerr << "         into a Windows key using SHA-1\n\n";
-#endif
 	cerr << "     Exits with codes :\n";
 	cerr << "         0 = Signature OK\n";
 	cerr << "         1 = Signature Bad\n";
@@ -178,9 +134,6 @@ int evaluate(int argc, char ** argv) {
 	bool					useXSECURIResolver = false;
 	bool                    useAnonymousResolver = false;
 	bool					useInteropResolver = false;
-#if defined (XSEC_HAVE_WINCAPI)
-	HCRYPTPROV				win32CSP = 0;
-#endif
 
 	bool skipRefs = false;
 
@@ -235,95 +188,12 @@ int evaluate(int argc, char ** argv) {
 			useAnonymousResolver = true;
 			paramCount++;
 		}
-#if defined (XSEC_HAVE_WINCAPI)
-		else if (_stricmp(argv[paramCount], "--wincapi") == 0 || _stricmp(argv[paramCount], "-w") == 0 ||
-			_stricmp(argv[paramCount], "--winhmackey") == 0 || _stricmp(argv[paramCount], "-wh") == 0) {
-
-			WinCAPICryptoProvider * cp = new WinCAPICryptoProvider();
-			XSECPlatformUtils::SetCryptoProvider(cp);
-
-			if (_stricmp(argv[paramCount], "--winhmackey") == 0 || _stricmp(argv[paramCount], "-wh") == 0) {
-
-				// Create a SHA-1 based key based on the <string> parameter
-
-				paramCount++;
-
-				if (!CryptAcquireContext(&win32CSP,
-					NULL,
-					NULL,
-					PROV_RSA_FULL,
-					CRYPT_VERIFYCONTEXT)) 
-				{
-					cerr << "Error obtaining default RSA_PROV" << endl;
-					return 2;
-				}
-
-				HCRYPTKEY k;
-				HCRYPTHASH h;
-				BOOL fResult = CryptCreateHash(
-					win32CSP,
-					CALG_SHA,
-					0,
-					0,
-					&h);
-
-				if (fResult == 0) {
-					cerr << "Error creating hash to create windows hmac key from password" << endl;
-					return 2;
-				}
-				fResult = CryptHashData(
-					h,
-					(unsigned char *) argv[paramCount],
-					(DWORD) strlen(argv[paramCount]),
-					0);
-				
-				if (fResult == 0) {
-					cerr << "Error hashing password to create windows hmac key" << endl;
-					return 2;
-				}
-
-				// Now create a key
-				fResult = CryptDeriveKey(
-					win32CSP,
-					CALG_RC2,
-					h,
-					CRYPT_EXPORTABLE,
-					&k);
-
-				if (fResult == 0) {
-					cerr << "Error deriving key from hash value" << endl;
-					return 2;
-				}
-
-				// Wrap in a WinCAPI object
-				WinCAPICryptoKeyHMAC * hk;
-				hk = new WinCAPICryptoKeyHMAC(win32CSP);
-				hk->setWinKey(k); 
-
-				key = hk;
-
-				CryptDestroyHash(h);
-
-			}
-
-			paramCount++;
-
-		}
-#endif
 		else {
 			cerr << "Unknown option: " << argv[paramCount] << endl << endl;
 			printUsage();
 			return 2;
 		}
 	}
-
-#if defined (XSEC_HAVE_WINCAPI) && !defined(XSEC_HAVE_OPENSSL)
-
-	// Use default DSS provider
-	WinCAPICryptoProvider * cp = new WinCAPICryptoProvider();
-	XSECPlatformUtils::SetCryptoProvider(cp);
-
-#endif
 
 	if (paramCount >= argc) {
 		printUsage();
@@ -557,12 +427,6 @@ int evaluate(int argc, char ** argv) {
 		retResult = 1;
 	}
 
-#if defined (XSEC_HAVE_WINCAPI)
-	// Clean up the handle to the CSP
-	if (win32CSP != 0)
-		CryptReleaseContext(win32CSP, 0);
-#endif
-
 	// Janitor will clean up the parser
 	return retResult;
 
@@ -591,10 +455,6 @@ int main(int argc, char **argv) {
 	try {
 
 		XMLPlatformUtils::Initialize();
-#ifdef XSEC_HAVE_XALAN
-		XPathEvaluator::initialize();
-		XalanTransformer::initialize();
-#endif
 		XSECPlatformUtils::Initialise();
 
 	}
@@ -609,10 +469,6 @@ int main(int argc, char **argv) {
 	retResult = evaluate(argc, argv);
 
 	XSECPlatformUtils::Terminate();
-#ifdef XSEC_HAVE_XALAN
-	XalanTransformer::terminate();
-	XPathEvaluator::terminate();
-#endif
 	XMLPlatformUtils::Terminate();
 
 #if defined (_DEBUG) && defined (_MSC_VER)
