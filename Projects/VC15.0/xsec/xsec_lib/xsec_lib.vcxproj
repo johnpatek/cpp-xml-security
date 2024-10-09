@@ -287,7 +287,6 @@
     <ClCompile Include="..\..\..\..\xsec\utils\XSECPlatformUtils.cpp" />
     <ClCompile Include="..\..\..\..\xsec\utils\XSECSafeBuffer.cpp" />
     <ClCompile Include="..\..\..\..\xsec\utils\XSECSafeBufferFormatter.cpp" />
-    <ClCompile Include="..\..\..\..\xsec\utils\XSECSOAPRequestorSimple.cpp" />
     <ClCompile Include="..\..\..\..\xsec\utils\XSECTXFMInputSource.cpp" />
     <ClCompile Include="..\..\..\..\xsec\utils\XSECXPathNodeList.cpp" />
     <ClCompile Include="..\..\..\..\xsec\framework\XSECAlgorithmMapper.cpp" />
