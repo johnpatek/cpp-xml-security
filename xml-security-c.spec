@@ -1,5 +1,5 @@
 %define compname xml-security-c
-%define libname lib%{compname}20
+%define libname lib%{compname}30
 %define develname lib%{compname}-devel
 %define utilname %{compname}-bin
 
