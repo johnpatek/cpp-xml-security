@@ -1,17 +1,21 @@
-Name:           xml-security-c
-Version:        2.0.4
-Release:        1
-Summary:        Shibboleth XML Security C++ Library
-Group:          Development/Libraries/C and C++
-Vendor:         Shibboleth Consortium
-License:        Apache-2.0
-URL:            http://www.opensaml.org/
-Source:         %{name}-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+%define compname xml-security-c
+%define libname lib%{compname}20
+%define develname lib%{compname}-devel
+%define utilname %{compname}-bin
 
-%{?_with_xalan:BuildRequires: libxalan-c-devel >= 1.11}
-BuildRequires:  libxerces-c-devel >= 3.2
-BuildRequires:  openssl-devel gcc-c++ pkgconfig
+Name: %{libname}
+Version: 3.0.0
+Release: 1%{?dist}
+Summary: XML security C++ library
+Group: Development/Libraries/C and C++
+License: Apache-2.0
+URL: https://shibboleth.net/downloads/xml-security-c
+Source0: %{compname}-%{version}.tar.bz2
+Provides: %{compname} = %{version}-%{release}
+Obsoletes: %{compname} < %{version}-%{release}
+
+BuildRequires: libxerces-c-devel >= 3.2
+BuildRequires: openssl-devel gcc-c++ pkgconfig
 %if "%{_vendor}" == "redhat"
 BuildRequires: redhat-rpm-config
 %endif
@@ -22,79 +26,61 @@ BuildRequires: gdb
 
 %description
 The xml-security-c library is a C++ implementation of the XML Digital Signature
-and Encryption specifications. The library makes use of the Apache XML project's
-Xerces-C XML Parser and Xalan-C XSLT processor. The latter is used for processing
-XPath and XSLT transforms.
+and Encryption specifications. The library makes use of the Apache Xerces-C XML Parser.
 
-%package -n xml-security-c-bin
-Summary:    Utilities for Shibboleth XML Security C++ Library
-Group:      Development/Libraries/C and C++
+The main package contains just the shared library.
 
-%description -n xml-security-c-bin
+%package -n %{utilname}
+Summary: Utilities for XML security C++ library
+Group: Development/Libraries/C and C++
+
+%description -n %{utilname}
 The xml-security-c library is a C++ implementation of the XML Digital Signature
-and Encryption specifications. The library makes use of the Apache XML project's
-Xerces-C XML Parser and Xalan-C XSLT processor. The latter is used for processing
-XPath and XSLT transforms.
+and Encryption specifications. The library makes use of the Apache Xerces-C XML Parser.
 
 This package contains the utility programs.
 
-%package -n libxml-security-c20
-Summary:    Shibboleth XML Security C++ Library
-Group:      Development/Libraries/C and C++
-Provides:   xml-security-c = %{version}-%{release}
+%package -n %{develname}
+Summary: Development files for the C++ XML security library
+Group: Development/Libraries/C and C++
+Requires: %{libname} = %{version}-%{release}
+Requires: openssl-devel
+Requires: libxerces-c-devel >= 3.2
+Provides: %{compname}-devel = %{version}-%{release}
 
-%description -n libxml-security-c20
+%description -n %{develname}
 The xml-security-c library is a C++ implementation of the XML Digital Signature
-and Encryption specifications. The library makes use of the Apache XML project's
-Xerces-C XML Parser and Xalan-C XSLT processor. The latter is used for processing
-XPath and XSLT transforms.
-
-This package contains just the shared library.
-
-%package -n libxml-security-c-devel
-Summary:	Development files for the Shibboleth C++ XML Security Library
-Group:		Development/Libraries/C and C++
-Requires:	libxml-security-c20 = %{version}-%{release}
-Requires:	openssl-devel
-Requires:       libxerces-c-devel >= 3.2
-%{?_with_xalan:Requires: libxalan-c-devel >= 1.11}
-Provides:   xml-security-c-devel = %{version}-%{release}
-
-%description -n libxml-security-c-devel
-The xml-security-c library is a C++ implementation of the XML Digital Signature
-and Encryption specifications. The library makes use of the Apache XML project's
-Xerces-C XML Parser and Xalan-C XSLT processor. The latter is used for processing
-XPath and XSLT transforms.
+and Encryption specifications. The library makes use of the Apache Xerces-C XML Parser.
 
 This package includes files needed for development with xml-security-c.
 
 %prep
-%setup -q
+%setup -q -n %{compname}-%{version}
 
 %build
-%configure --with-openssl %{!?_with_xalan: --without-xalan} %{!?_enable_xkms: --disable-xkms}
+%configure --with-openssl
 %{__make}
 
 %install
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
 
-%post -n libxml-security-c20 -p /sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -n libxml-security-c20 -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
-%files -n xml-security-c-bin
+%files -n %{utilname}
 %defattr(-,root,root,-)
 %{_bindir}/*
 
-%files -n libxml-security-c20
+%files
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 
-%files -n libxml-security-c-devel
+%files -n %{develname}
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
@@ -102,15 +88,20 @@ This package includes files needed for development with xml-security-c.
 %exclude %{_libdir}/*.la
 
 %changelog
-* Thu Jun 27 2024 Scott Cantor <cantor.2@osu.edu> 2.0.4-1
-- Adjust for migration to Shibboleth Project
+* Wed Oct 16 2024 Scott Cantor <cantor.2@osu.edu> 3.0.0-1
+- Update to version 3.0.0
+- Sanitize Apache references in metadata
+- Remove Xalan/XKMS references in build
 
-* Thu Oct 14 2021 Scott Cantor <cantor.2@osu.edu> 2.0.3-1
-- Bump version for OpenSSL 3 fix
-
-* Fri Sep 27 2019 Scott Cantor <cantor.2@osu.edu> 2.0.0-2
-- Add CentOS 8 dependency rule
-- Remove Solaris exclusions
+* Sat Jun 17 2023 John W. O'Brien <john@saltant.com> 2.0.4-2
+- Normalize SPEC file whitespace
+- Delete obsolete BuildRoot macro
+- Conform License field to SPDX License List
+- Ensure Source is valid and fetchable
+- Adopt %make_install
+- Parameterize (sub-)package names
+- Replace empty main package with lib sub-package
+- Append %dist to Release
 
 * Mon Nov 13 2017 Scott Cantor <cantor.2@osu.edu> 2.0.0-1
 - update to 2.0.0
