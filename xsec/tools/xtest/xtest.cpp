@@ -35,6 +35,7 @@
 
 #include <memory.h>
 #include <iostream>
+#include <memory>
 #include <stdlib.h>
 
 #include <xercesc/util/PlatformUtils.hpp>
@@ -69,6 +70,7 @@
 #include <xsec/enc/XSECCryptoSymmetricKey.hpp>
 #include <xsec/framework/XSECError.hpp>
 #include <xsec/framework/XSECProvider.hpp>
+#include <xsec/framework/XSECURIResolverXerces.hpp>
 #include <xsec/xenc/XENCCipher.hpp>
 #include <xsec/xenc/XENCEncryptedData.hpp>
 #include <xsec/xenc/XENCEncryptedKey.hpp>
@@ -433,6 +435,7 @@ void outputDoc(DOMImplementation * impl, DOMDocument * doc) {
 bool reValidateSig(DOMImplementation *impl, DOMDocument * inDoc, XSECCryptoKey *k) {
 
 	// Take a signature in DOM, serialise and re-validate
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
 
 	try {
 
@@ -486,6 +489,7 @@ bool reValidateSig(DOMImplementation *impl, DOMDocument * inDoc, XSECCryptoKey *
 		 */
 
 		XSECProvider prov;
+		prov.setDefaultURIResolver(resolver.get());
 		DSIGSignature * sig = prov.newSignatureFromDOM(doc);
 		sig->load();
 		sig->setSigningKey(k);
@@ -525,7 +529,7 @@ void unitTestEnvelopingSignature(DOMImplementation * impl) {
 	// This tests an enveloping signature as the root node
 
 	cerr << "Creating enveloping signature ... ";
-	
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
 	try {
 		
 		// Create a document
@@ -538,6 +542,7 @@ void unitTestEnvelopingSignature(DOMImplementation * impl) {
 		DSIGSignature *sig;
 		DOMElement *sigNode;
 		
+		prov.setDefaultURIResolver(resolver.get());
 		sig = prov.newSignature();
 		sig->setDSIGNSPrefix(MAKE_UNICODE_STRING("ds"));
 		sig->setPrettyPrint(true);
@@ -634,7 +639,7 @@ void unitTestBase64NodeSignature(DOMImplementation * impl) {
 	// This tests a normal signature with a reference to a Base64 element
 
 	cerr << "Creating a base64 Element reference ... ";
-	
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
 	try {
 		
 		// Create a document
@@ -647,6 +652,7 @@ void unitTestBase64NodeSignature(DOMImplementation * impl) {
 		DSIGSignature *sig;
 		DOMElement *sigNode;
 		
+		prov.setDefaultURIResolver(resolver.get());
 		sig = prov.newSignature();
 		sig->setDSIGNSPrefix(MAKE_UNICODE_STRING("ds"));
 		sig->setPrettyPrint(true);
@@ -745,7 +751,7 @@ void unitTestLongSHA(DOMImplementation * impl) {
 	// This tests an enveloping signature as the root node, using SHA224/256/384/512
 
 	cerr << "Creating long SHA references using HMAC... ";
-	
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
 	try {
 		
 		// Create a document
@@ -759,6 +765,7 @@ void unitTestLongSHA(DOMImplementation * impl) {
 		DOMElement *sigNode;
 		DSIGReference *ref[4];
 		
+		prov.setDefaultURIResolver(resolver.get());
 		sig = prov.newSignature();
 		sig->setDSIGNSPrefix(MAKE_UNICODE_STRING("ds"));
 		sig->setPrettyPrint(true);
@@ -935,7 +942,7 @@ void unitTestLongSHA(DOMImplementation * impl) {
 void unitTestSig(DOMImplementation * impl, XSECCryptoKey * k, const XMLCh * AlgURI) {
 
 	// Given a specific RSA/EC key and particular algorithm URI, sign and validate a document
-
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
 	try {
 		
 		// Create a document
@@ -948,6 +955,7 @@ void unitTestSig(DOMImplementation * impl, XSECCryptoKey * k, const XMLCh * AlgU
 		DSIGSignature *sig;
 		DOMElement *sigNode;
 		
+		prov.setDefaultURIResolver(resolver.get());
 		sig = prov.newSignature();
 		sig->setDSIGNSPrefix(MAKE_UNICODE_STRING("ds"));
 		sig->setPrettyPrint(true);
@@ -1143,12 +1151,14 @@ void testSignature(DOMImplementation *impl) {
 	DOMElement *sigNode;
 	int refCount;
 
+	std::unique_ptr<XSECURIResolver> resolver(new XSECURIResolverXerces());
+
 	try {
 		
 		/*
 		 * Now we have a document, create a signature for it.
 		 */
-		
+		prov.setDefaultURIResolver(resolver.get());
 		sig = prov.newSignature();
 		sig->setDSIGNSPrefix(MAKE_UNICODE_STRING("ds"));
 		sig->setPrettyPrint(true);
@@ -1608,7 +1618,7 @@ void unitTestElementContentEncrypt(DOMImplementation *impl, XSECCryptoKey * key,
 	// Create and execute cipher
 
 	XSECProvider prov;
-	XENCCipher * cipher;
+	std::unique_ptr<XENCCipher> cipher;
 
 	try {
 		
@@ -1616,7 +1626,7 @@ void unitTestElementContentEncrypt(DOMImplementation *impl, XSECCryptoKey * key,
 		 * Now we have a document, find the data node.
 		 */
 
-		cipher = prov.newCipher(doc);
+		cipher.reset(prov.newCipher(doc));
 		cipher->setXENCNSPrefix(MAKE_UNICODE_STRING("xenc"));
 		cipher->setPrettyPrint(true);
 
@@ -2394,40 +2404,40 @@ int main(int argc, char **argv) {
 
 	while (paramCount < argc) {
 
-		if (_stricmp(argv[paramCount], "--help") == 0 || _stricmp(argv[paramCount], "-h") == 0) {
+		if (strcmp(argv[paramCount], "--help") == 0 || strcmp(argv[paramCount], "-h") == 0) {
 			printUsage();
 			exit(0);
 		}
-		else if (_stricmp(argv[paramCount], "--print-docs") == 0 || _stricmp(argv[paramCount], "-p") == 0) {
+		else if (strcmp(argv[paramCount], "--print-docs") == 0 || strcmp(argv[paramCount], "-p") == 0) {
 			g_printDocs = true;
 			paramCount++;
 		}
 
-		else if (_stricmp(argv[paramCount], "--signature-only") == 0 || _stricmp(argv[paramCount], "-s") == 0) {
+		else if (strcmp(argv[paramCount], "--signature-only") == 0 || strcmp(argv[paramCount], "-s") == 0) {
 			doEncryptionTest = false;
 			doEncryptionUnitTests = false;
 			doSignatureUnitTests = false;
 			paramCount++;
 		}
-		else if (_stricmp(argv[paramCount], "--encryption-only") == 0 || _stricmp(argv[paramCount], "-e") == 0) {
+		else if (strcmp(argv[paramCount], "--encryption-only") == 0 || strcmp(argv[paramCount], "-e") == 0) {
 			doSignatureTest = false;
 			doEncryptionUnitTests = false;
 			doSignatureUnitTests = false;
 			paramCount++;
 		}
-		else if (_stricmp(argv[paramCount], "--encryption-unit-only") == 0 || _stricmp(argv[paramCount], "-u") == 0) {
+		else if (strcmp(argv[paramCount], "--encryption-unit-only") == 0 || strcmp(argv[paramCount], "-u") == 0) {
 			doEncryptionTest = false;
 			doSignatureTest = false;
 			doSignatureUnitTests = false;
 			paramCount++;
 		}
-		else if (_stricmp(argv[paramCount], "--signature-unit-only") == 0 || _stricmp(argv[paramCount], "-t") == 0) {
+		else if (strcmp(argv[paramCount], "--signature-unit-only") == 0 || strcmp(argv[paramCount], "-t") == 0) {
 			doEncryptionTest = false;
 			doSignatureTest = false;
 			doEncryptionUnitTests = false;
 			paramCount++;
 		}
-        else if (_stricmp(argv[paramCount], "--no-gcm") == 0) {
+        else if (strcmp(argv[paramCount], "--no-gcm") == 0) {
             g_testGCM = false;
             paramCount++;
         }

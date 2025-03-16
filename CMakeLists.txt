@@ -22,12 +22,14 @@ if(OPENSSL_FOUND)
   set(XSEC_OPENSSL_HAVE_GCM 1)
   set(XSEC_OPENSSL_HAVE_EC 1)
   set(XSEC_OPENSSL_HAVE_SHA2 1)
+  set(XSEC_OPENSSL_HAVE_MGF1 1)
 else()
   set(XSEC_HAVE_OPENSSL 0)
   set(XSEC_OPENSSL_HAVE_AES 0)
   set(XSEC_OPENSSL_HAVE_GCM 0)
   set(XSEC_OPENSSL_cHAVE_EC 0)
   set(XSEC_OPENSSL_HAVE_SHA2 0)
+  set(XSEC_OPENSSL_HAVE_MGF1 0)
 endif()
 
 # Check for getcwd(NULL, 0)
@@ -55,16 +57,29 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/xsec/framework)
 set(CANON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/canon)
 set(DSIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/dsig)
 set(ENC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/enc)
+set(OPENSSL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/enc/OpenSSL)
+set(XSCRYPT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/enc/XSCrypt)
 set(FRAMEWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/framework)
 set(SAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/samples)
+set(TOOLS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/tools)
 set(TRANSFORMERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/transformers)
 set(UTILS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/utils)
 set(XENC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/xenc)
+set(IMPL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xsec/xenc/impl)
 
 # Add source files
-file(GLOB XSEC_SOURCES ${CANON_DIR}/*.cpp ${DSIG_DIR}/*.cpp ${ENC_DIR}/*.cpp ${FRAMEWORK_DIR}/*.cpp ${TRANSFORMERS_DIR}/*.cpp ${UTILS_DIR}/*.cpp ${XENC_DIR}/*.cpp)
+file(GLOB XSEC_SOURCES ${CANON_DIR}/*.cpp ${DSIG_DIR}/*.cpp ${ENC_DIR}/*.cpp ${OPENSSL_DIR}/*.cpp ${XSCRYPT_DIR}/*.cpp ${FRAMEWORK_DIR}/*.cpp ${TRANSFORMERS_DIR}/*.cpp ${UTILS_DIR}/*.cpp ${XENC_DIR}/*.cpp ${IMPL_DIR}/*.cpp)
 
 # Add libxml-security-c
 add_library(xml-security-c SHARED ${XSEC_SOURCES})
 target_link_libraries(xml-security-c ${XercesC_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} OpenSSL::Crypto OpenSSL::SSL)
-target_include_directories(xml-security-c PUBLIC ${CANON_DIR}  ${XercesC_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+target_include_directories(
+  xml-security-c 
+  PUBLIC 
+  ${CANON_DIR} ${DSIG_DIR}  ${XercesC_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+if(OPENSSL_FOUND)
+  target_compile_definitions(xml-security-c PUBLIC XSEC_HAVE_OPENSSL=1 XSEC_OPENSSL_HAVE_AES=1 XSEC_OPENSSL_HAVE_GCM=1 XSEC_OPENSSL_HAVE_EC=1 XSEC_OPENSSL_HAVE_SHA2=1 XSEC_OPENSSL_HAVE_MGF1=1)
+endif()
+
+add_executable(xsec-xtest ${TOOLS_DIR}/xtest/xtest.cpp)
+target_link_libraries(xsec-xtest xml-security-c)
