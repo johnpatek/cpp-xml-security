@@ -75,8 +75,12 @@ add_library(xml-security-c SHARED ${XSEC_SOURCES})
 target_link_libraries(xml-security-c ${XercesC_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} OpenSSL::Crypto OpenSSL::SSL)
 target_include_directories(
   xml-security-c 
-  PUBLIC 
-  ${CANON_DIR} ${DSIG_DIR}  ${XercesC_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+  PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR} 
+  ${CANON_DIR} 
+  ${DSIG_DIR} 
+  ${XercesC_INCLUDE_DIRS} 
+  ${OPENSSL_INCLUDE_DIR})
 if(OPENSSL_FOUND)
   target_compile_definitions(xml-security-c PUBLIC XSEC_HAVE_OPENSSL=1 XSEC_OPENSSL_HAVE_AES=1 XSEC_OPENSSL_HAVE_GCM=1 XSEC_OPENSSL_HAVE_EC=1 XSEC_OPENSSL_HAVE_SHA2=1 XSEC_OPENSSL_HAVE_MGF1=1)
 endif()
