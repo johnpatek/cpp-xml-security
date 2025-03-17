@@ -39,11 +39,7 @@
 // Constructors/Destructors
 
 OpenSSLCryptoHash::OpenSSLCryptoHash(HashType alg) :
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    mp_mdctx(&m_mdctx_store)
-#else
     mp_mdctx(EVP_MD_CTX_new())
-#endif
 	, m_mdLen(0)
  {
     if (!mp_mdctx)
@@ -121,11 +117,7 @@ OpenSSLCryptoHash::OpenSSLCryptoHash(HashType alg) :
 
 
 OpenSSLCryptoHash::~OpenSSLCryptoHash() {
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    EVP_MD_CTX_cleanup(mp_mdctx);
-#else
     EVP_MD_CTX_free(mp_mdctx);
-#endif
 
 }
 
@@ -133,10 +125,6 @@ OpenSSLCryptoHash::~OpenSSLCryptoHash() {
 
 // Hashing Activities
 void OpenSSLCryptoHash::reset(void) {
-
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    EVP_MD_CTX_cleanup(mp_mdctx);
-#endif
     EVP_DigestInit(mp_mdctx, mp_md);
 
 }

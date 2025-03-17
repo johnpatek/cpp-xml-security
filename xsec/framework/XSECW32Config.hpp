@@ -45,21 +45,19 @@
 #if defined (XSEC_HAVE_OPENSSL)
 
 #	include <openssl/opensslv.h>
-#	if (OPENSSL_VERSION_NUMBER >= 0x00907000)
+#	if (OPENSSL_VERSION_NUMBER >= 0x10001000)
 #		define XSEC_OPENSSL_CONST_BUFFERS
 #		define XSEC_OPENSSL_HAVE_AES
 #       define XSEC_OPENSSL_HAVE_EC
 #		define XSEC_OPENSSL_CANSET_PADDING
 #		define XSEC_OPENSSL_HAVE_CRYPTO_CLEANUP_ALL_EX_DATA
-#	endif
-#	if (OPENSSL_VERSION_NUMBER >= 0x00908000)
 #		define XSEC_OPENSSL_D2IX509_CONST_BUFFER
 #       define XSEC_OPENSSL_HAVE_SHA2
 #       define XSEC_OPENSSL_HAVE_MGF1
 #       define XSEC_OPENSSL_HAVE_EVP_PKEY_ID
-#	endif
-#	if (OPENSSL_VERSION_NUMBER >= 0x10001000)
 #		define XSEC_OPENSSL_HAVE_GCM
+#   else
+#       error "OpenSSL version 1.0.1 or later is required"
 #	endif
 
 #endif

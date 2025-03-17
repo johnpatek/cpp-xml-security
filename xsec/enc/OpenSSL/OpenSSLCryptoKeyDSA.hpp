@@ -235,9 +235,7 @@ private:
     void setPBase(BIGNUM *pBase);
     void setQBase(BIGNUM *pBase);
     void setGBase(BIGNUM *pBase);
-#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     void commitPQG();
-#endif
 };
 
 #endif /* XSEC_HAVE_OPENSSL */

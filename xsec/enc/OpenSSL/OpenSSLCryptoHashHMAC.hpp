@@ -175,10 +175,7 @@ private:
     unsigned char       m_mdValue[EVP_MAX_MD_SIZE];     // Final output
     unsigned int        m_mdLen;                        // Length of digest
     HashType            m_hashType;                     // What type of hash is this?
-    HMAC_CTX            * mp_hctx;                        // Context for HMAC
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    HMAC_CTX            m_hctx_store;                   // Context for HMAC - store
-#endif
+    HMAC_CTX            * mp_hctx;                      // Context for HMAC
     safeBuffer          m_keyBuf;                       // The loaded key
     unsigned int        m_keyLen;                       // The loaded key length
     bool                m_initialised;
