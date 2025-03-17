@@ -43,24 +43,6 @@ XSEC_USING_XERCES(ArrayJanitor);
 
 #include <openssl/dsa.h>
 
-// Inline for older OpenSSL versions.
-#if (OPENSSL_VERSION_NUMBER <   0x10100000L)
-static int BN_bn2binpad(const BIGNUM *a, unsigned char *to, int tolen)
-{
-    int bytes = BN_num_bytes(a);
-
-    if (bytes > tolen) {
-        return -1;
-    }
-    while (bytes < tolen) {
-        *to++ = 0;
-        bytes++;
-    }
-    BN_bn2bin(a, to);
-    return tolen;
-}
-#endif
-
 OpenSSLCryptoKeyDSA::OpenSSLCryptoKeyDSA() : mp_dsaKey(NULL), mp_accumP(NULL), mp_accumQ(NULL), mp_accumG(NULL) {
 };
 
@@ -119,12 +101,6 @@ void OpenSSLCryptoKeyDSA::setPBase(BIGNUM  * p) {
     if (mp_dsaKey == NULL)
         mp_dsaKey = DSA_new();
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-
-    // Do it immediately
-    mp_dsaKey->p = p;
-
-#else
     // Save it for later
     if (mp_accumP != NULL)
         BN_free(mp_accumP);
@@ -132,8 +108,6 @@ void OpenSSLCryptoKeyDSA::setPBase(BIGNUM  * p) {
     mp_accumP = p;
 
     commitPQG();
-
-#endif
 
 }
 
@@ -148,18 +122,11 @@ void OpenSSLCryptoKeyDSA::setQBase(BIGNUM  * q) {
     if (mp_dsaKey == NULL)
         mp_dsaKey = DSA_new();
 
-#if (OPENSSL_VERSION_NUMBER <   0x10100000L)
-
-    mp_dsaKey->q = q;
-
-#else
     if (mp_accumQ != NULL)
         BN_free(mp_accumQ);
 
     mp_accumQ = q;
     commitPQG();
-
-#endif
 
 }
 
@@ -175,22 +142,14 @@ void OpenSSLCryptoKeyDSA::setGBase(BIGNUM  * g) {
     if (mp_dsaKey == NULL)
         mp_dsaKey = DSA_new();
 
-#if (OPENSSL_VERSION_NUMBER <   0x10100000L)
-
-    mp_dsaKey->g = g;
-
-#else
     if (mp_accumG != NULL)
         BN_free(mp_accumG);
 
     mp_accumG = g;
     commitPQG();
 
-#endif
-
 }
 
-#if (OPENSSL_VERSION_NUMBER >=  0x10100000L)
 void OpenSSLCryptoKeyDSA::commitPQG() {
 
 
@@ -203,7 +162,6 @@ void OpenSSLCryptoKeyDSA::commitPQG() {
 
     }
 }
-#endif
 
 void OpenSSLCryptoKeyDSA::loadYBase64BigNums(const char * b64, unsigned int len) {
 

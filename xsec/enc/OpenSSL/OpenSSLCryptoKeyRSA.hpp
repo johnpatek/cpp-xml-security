@@ -266,9 +266,7 @@ private:
     BIGNUM *mp_accumE, *mp_accumN;
     void setEBase(BIGNUM *eBase);
     void setNBase(BIGNUM *nBase);
-#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     void commitEN();
-#endif
 
 };
 

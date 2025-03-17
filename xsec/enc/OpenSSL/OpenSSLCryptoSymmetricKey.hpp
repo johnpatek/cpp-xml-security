@@ -308,9 +308,6 @@ private:
     SymmetricKeyType                m_keyType;
     SymmetricKeyMode                m_keyMode;
     EVP_CIPHER_CTX                  *mp_ctx;        // OpenSSL Cipher Context structure
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    EVP_CIPHER_CTX                  m_ctx_space;    // OpenSSL Cipher Context structure - store
-#endif
     safeBuffer                      m_keyBuf;       // Holder of the key
     safeBuffer                      m_tagBuf;       // Holder of authentication tag
     unsigned int                    m_keyLen;

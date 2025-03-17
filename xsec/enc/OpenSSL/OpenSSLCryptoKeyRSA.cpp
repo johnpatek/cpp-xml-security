@@ -347,18 +347,11 @@ void OpenSSLCryptoKeyRSA::setNBase(BIGNUM *nBase) {
     if (mp_rsaKey == NULL)
         mp_rsaKey = RSA_new();
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-
-    mp_rsaKey->n = nBase;
-
-#else
-
     if (mp_accumN)
         BN_free(mp_accumN);
 
     mp_accumN = nBase;
     commitEN();
-#endif
 }
 
 
@@ -372,19 +365,13 @@ void OpenSSLCryptoKeyRSA::setEBase(BIGNUM *eBase) {
     if (mp_rsaKey == NULL)
         mp_rsaKey = RSA_new();
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    mp_rsaKey->e = eBase;
-#else
-
     if (mp_accumE)
         BN_free(mp_accumE);
 
     mp_accumE = eBase;
     commitEN();
-#endif
 }
 
-#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 void OpenSSLCryptoKeyRSA::commitEN() {
 
     if (NULL == mp_accumN || NULL == mp_accumE)
@@ -396,7 +383,6 @@ void OpenSSLCryptoKeyRSA::commitEN() {
     mp_accumN = NULL;
     mp_accumE = NULL;
 }
-#endif
 
 // "Hidden" OpenSSL functions
 

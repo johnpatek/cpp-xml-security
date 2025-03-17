@@ -48,11 +48,6 @@ XERCES_CPP_NAMESPACE_USE
 //           Construction/Destruction
 // --------------------------------------------------------------------------------
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L) || \
-	((defined(LIBRESSL_VERSION_NUMBER) && LIBRESSL_VERSION_NUMBER < 0x30500000L))
-OpenSSLCryptoBase64::OpenSSLCryptoBase64() : mp_ectx(&m_ectx_store), mp_dctx(&m_dctx_store) { }
-OpenSSLCryptoBase64::~OpenSSLCryptoBase64() { }
-#else
 OpenSSLCryptoBase64::OpenSSLCryptoBase64() : mp_ectx(EVP_ENCODE_CTX_new()), mp_dctx(EVP_ENCODE_CTX_new()) {
     if (!mp_ectx || !mp_dctx)
         throw XSECCryptoException(XSECCryptoException::ECError, "OpenSSL:CrypoBase64 - cannot allocate contexts");
@@ -62,7 +57,6 @@ OpenSSLCryptoBase64::~OpenSSLCryptoBase64() {
     EVP_ENCODE_CTX_free(mp_dctx);
 }
 
-#endif
 // --------------------------------------------------------------------------------
 //           Decoding
 // --------------------------------------------------------------------------------

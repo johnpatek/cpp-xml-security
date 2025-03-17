@@ -54,11 +54,7 @@ m_keyMode(MODE_NONE),
 m_keyBuf(""),
 m_tagBuf(""),
 m_keyLen(0),
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-mp_ctx(&m_ctx_space),
-#else
 mp_ctx(EVP_CIPHER_CTX_new()),
-#endif
 m_initialised(false),
 m_blockSize(0),
 m_ivSize(0),
@@ -78,9 +74,7 @@ OpenSSLCryptoSymmetricKey::~OpenSSLCryptoSymmetricKey() {
 	// Clean up the context
 
 	EVP_CIPHER_CTX_cleanup(mp_ctx);
-#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     EVP_CIPHER_CTX_free(mp_ctx);
-#endif
 }
 
 // --------------------------------------------------------------------------------

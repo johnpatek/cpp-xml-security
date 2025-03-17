@@ -42,11 +42,7 @@
 // Constructors/Destructors
 
 OpenSSLCryptoHashHMAC::OpenSSLCryptoHashHMAC(HashType alg) : m_mdLen(0),
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    mp_hctx(&m_hctx_store)
-#else
     mp_hctx(HMAC_CTX_new())
-#endif
 	, m_keyLen(0)
  {
 
@@ -153,12 +149,7 @@ void OpenSSLCryptoHashHMAC::setKey(const XSECCryptoKey *key) {
 
 OpenSSLCryptoHashHMAC::~OpenSSLCryptoHashHMAC() {
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-    if (m_initialised)
-        HMAC_CTX_cleanup(mp_hctx);
-#else
     HMAC_CTX_free(mp_hctx);
-#endif
 
 }
 
@@ -170,9 +161,6 @@ void OpenSSLCryptoHashHMAC::reset(void) {
 
     if (m_initialised) {
 
-#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-        HMAC_CTX_cleanup(mp_hctx);
-#endif
         HMAC_Init(mp_hctx, 
             m_keyBuf.rawBuffer(),
             m_keyLen,
