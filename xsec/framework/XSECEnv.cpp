@@ -231,8 +231,6 @@ XSECEnv::~XSECEnv() {
 		delete *it;
 	}
 
-	m_idAttributeNameList.empty();
-
 
 }
 
